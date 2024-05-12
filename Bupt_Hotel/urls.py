@@ -16,9 +16,12 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path,include
+from smallHotel import views
 
 """ 参数1 路径名 path (xxx/) """
 urlpatterns = [
     path('admin/', admin.site.urls),
     path("smallHotel/", include("smallHotel.urls")),
+    #待修改
+    path('index/', views.index)
 ]
