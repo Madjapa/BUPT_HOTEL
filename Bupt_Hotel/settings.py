@@ -127,7 +127,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
 STATIC_URL = 'static/'
-STATICFILES_DIRS = BASE_DIR / APP_NAME / 'statics'
+#STATICFILES_DIRS = BASE_DIR / APP_NAME / 'statics'
+STATICFILES_DIRS = [
+    'D:/Users/本大人不在/Desktop/BUPT_HOTEL/static/',
+    # 添加其他静态文件目录路径
+]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
