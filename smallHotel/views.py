@@ -64,6 +64,15 @@ class SeverQueue:
 def admin(request):
     return render(request,"homepage.html")
 
-#登录成功页面
-def login(request):
-    return render(request,"login.html")
+#接待员页面
+def reception(request):
+    if request.method == 'POST':
+        name = request.POST.get('username')
+        num = request.POST.get('room_num')
+        print(name,num)
+    return render(request,"reception.html")
+
+#顾客页面
+def customer(request):
+    return render(request, "customer.html")
+

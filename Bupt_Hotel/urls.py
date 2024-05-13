@@ -22,6 +22,7 @@ from smallHotel import views
 urlpatterns = [
     #path('admin/', admin.site.urls),
     path('admin/', views.admin),
-    path('login/',views.login),
+    path('reception/',views.reception),
+    path('customer/',views.customer),
     #path('user/list',views.user_list)
 ]
