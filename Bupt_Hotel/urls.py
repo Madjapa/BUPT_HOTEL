@@ -20,8 +20,8 @@ from smallHotel import views
 
 """ 参数1 路径名 path (xxx/) """
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path("smallHotel/", include("smallHotel.urls")),
-    #待修改
-    path('index/', views.index)
+    #path('admin/', admin.site.urls),
+    path('admin/', views.admin),
+    path('login/',views.login),
+    #path('user/list',views.user_list)
 ]
