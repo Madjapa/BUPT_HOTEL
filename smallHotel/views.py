@@ -62,7 +62,7 @@ class SeverQueue:
 # Create your views here.
 #主页
 def admin(request):
-    return render(request,"homepage.html")
+    return render(request,"smallHotel/homepage.html")
 
 #接待员页面
 def reception(request):
@@ -70,11 +70,8 @@ def reception(request):
         name = request.POST.get('username')
         num = request.POST.get('room_num')
         print(name,num)
-    return render(request,"reception.html")
+    return render(request,"smallHotel/reception.html")
 
 #顾客页面
 def customer(request):
-    return render(request, "customer.html")
-
-def test(request):
-    return render(request,"index.html")
+    return render(request, "smallHotel/customer.html")

@@ -14,17 +14,13 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+
 from django.contrib import admin
 from django.urls import path,include
-'''
-参数1 路径名 
-path (xxx/) 
-'''
+
+'''该文件不需要修改了，只要改smallHotel下的urls.py即可'''
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path("smallHotel/", include("smallHotel.urls")),
 ]
-def out():
-    print(urlpatterns)
-
-out()
