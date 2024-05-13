@@ -16,12 +16,15 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path,include
-
+'''
+参数1 路径名 
+path (xxx/) 
+'''
 urlpatterns = [
-    '''
-    参数1 路径名 
-    path (xxx/) 
-    '''
     path('admin/', admin.site.urls),
     path("smallHotel/", include("smallHotel.urls")),
 ]
+def out():
+    print(urlpatterns)
+
+out()
