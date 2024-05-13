@@ -62,8 +62,11 @@ class SeverQueue:
 # Create your views here.
 #主页
 def admin(request):
+
     return render(request,"homepage.html")
 
 #登录成功页面
 def login(request):
+    print(request.method)
     return render(request,"login.html")
+

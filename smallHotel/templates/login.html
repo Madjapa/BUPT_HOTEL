@@ -2,9 +2,91 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登录 - 图书管理系统</title>
+    {% load static %}
+    <link rel="stylesheet" href="{%static 'style.css'%}">
 </head>
 <body>
-<h1>syb成功登录</h1>
+<header>
+    <h1>图书管理系统</h1>
+</header>
+<div class="login-container">
+    <h2>登录</h2>
+    <form id="login-form">
+        <div class="form-group">
+            <label for="number">学号</label>
+            <input type="text" id="number" name="number" required>
+        </div>
+        <div class="form-group">
+            <label for="password">密码</label>
+            <input type="password" id="password" name="password" required>
+        </div>
+        <button id="login-button" type="button">登录</button>
+    </form>
+</div>
+{%load static%}
+<script src="{% static 'h.js'%}"></script>
+<script>
+    // 创建 Axios 实例
+    const axiosInstance = axios.create({
+        baseURL: ' http://127.0.0.1:8000/', // 设置后端 API 地址
+        headers: {
+            'Content-Type': 'application/json' // 设置请求头
+        }
+    });
+
+    document.getElementById("login-button").addEventListener("click", function (event) {
+        // 获取学号和密码输入框的值
+        var number = document.getElementById("number").value;
+        var password = document.getElementById("password").value;
+
+        // 校验学号和密码格式是否正确
+        if (!isValidNumber(number)) {
+            alert("学号必须是10位数字！");
+            event.preventDefault(); // 阻止表单的默认提交行为
+            return;
+        }
+        if (!isValidPassword(password)) {
+            alert("密码必须是6-12位字符串！");
+            event.preventDefault(); // 阻止表单的默认提交行为
+            return;
+        }
+
+        // 构造要发送的 JSON 数据
+        var data = {
+            number: number,
+            password: password
+        };
+
+
+        // 发送 POST 请求给后端
+        axiosInstance.post('/login', data)
+            .then(function (response) {
+                console.log(response.data.code);
+                if (response.data.code === 1) {
+                    // 存储 token 到 Cookie
+                    document.cookie = `token=${response.data.data}`;
+                    alert("登录成功！");
+                    window.location.href = "index.html";
+                } else {
+                    alert("登录失败！" + response.data.data);
+                }
+            })
+            .catch(function (error) {
+                alert("登录失败！请检查其他原因。");
+            });
+    });
+
+    // 校验学号格式是否正确
+    function isValidNumber(number) {
+        return number.length === 10;
+    }
+
+    // 校验密码格式是否正确
+    function isValidPassword(password) {
+        return password.length >= 6 && password.length <= 12;
+    }
+</script>
 </body>
 </html>
