@@ -18,5 +18,6 @@ urlpatterns = [
     path("rec/",views.reception,name="recept"),
     path("cus/",views.customer,name="customer"),
     path("man/",views.manager,name="manager"),
-    path("mon/",views.monitor,name="monitor")
+    path("mon/",views.monitor,name="monitor"),
+    path("cus/temperature/",views.test,name="test")
 ]

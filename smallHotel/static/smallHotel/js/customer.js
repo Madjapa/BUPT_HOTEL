@@ -1,6 +1,3 @@
-
-import axios from 'axios'
-
 const axiosInstance = axios.create({
     baseURL: 'http://127.0.0.1:8000', // 设置后端 API 地址
     headers: {
@@ -30,12 +27,12 @@ function tempSub(){//空调降温
 }
 function tempSubmit(){
     //用表单的方式提交温度给后端（提交当前显示在温度调节器的目标温度即可）
-    axios.post('/cus/temperature/',{roomid: roomid,temp: targetTemp})
+    axios.post('temperature/',{roomid: roomid,temp: targetTemp})
     .then(response =>{
         console.log(response.data);
     })
     .catch(error =>{
-        console.error("error");
+        console.log("error");
     });
 }
 function coolButton(){//制冷
@@ -69,4 +66,5 @@ var temp = 21;//初始房间温度
 var targetTemp = 26;//缺省目标温度
 var mytimer;
 var roomid = 1;
-
+var csrftoken = $.cookie('csrftoken');
+axios.defaults.headers.common['X-CSRFToken'] = csrftoken;
