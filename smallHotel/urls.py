@@ -21,5 +21,5 @@ urlpatterns = [
     path("mon/",views.monitor,name="monitor"),
     path("cus/temperature/",views.test,name="test"),
     path("cus/boot/",views.boot,name="boot"),
-    path("cus/shutdown/",views.shutdown,name="shutdown"),
+    #path("cus/shutdown/",views.shutdown,name="shutdown"),
 ]
