@@ -1,5 +1,6 @@
-from django.shortcuts import render,HttpResponse
-
+from django.shortcuts import render
+import json
+from django.http import JsonResponse
 from .system import *
 
 
@@ -26,10 +27,6 @@ def manager(request):
 
 def monitor(request):
     return render(request,"smallHotel/monitor")
-
-import json
-from django.http import JsonResponse
-
 
 def test(request):
     if request.method == 'POST':

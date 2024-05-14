@@ -4,7 +4,46 @@ const axiosInstance = axios.create({
         'Content-Type': 'application/json' // 设置请求头
     }
 });
+function btnFuncAdd(){//给button添加点击事件
+    document.getElementById('target_temp_sub_button').setAttribute("onclick","tempAdd");
+    document.getElementById('target_temp_add_button').setAttribute("onclick","tempSub");
+    document.getElementById('low_speed_button').setAttribute("onclick","windspeedAdjust");
+    document.getElementById('middle_speed_button').setAttribute("onclick","windspeedAdjust");
+    document.getElementById('high_speed_button').setAttribute("onclick","windspeedAdjust");
+    document.getElementById('cool_button').setAttribute("onclick","coolButton");
+    document.getElementById('heat_button').setAttribute("onclick","heatButton");
+}
+function btnFuncCease(){//删除button的点击事件
+    document.getElementById('target_temp_sub_button').removeAttribute("onclick");
+    document.getElementById('target_temp_add_button').removeAttribute("onclick");
+    document.getElementById('low_speed_button').removeAttribute("onclick");
+    document.getElementById('middle_speed_button').removeAttribute("onclick");
+    document.getElementById('high_speed_button').removeAttribute("onclick");
+    document.getElementById('cool_button').removeAttribute("onclick");
+    document.getElementById('heat_button').removeAttribute("onclick");
+}
+function bootfront(){
+//界面
+//修改上方状态栏（关机->运行中）
+//修改温度界面（开空调改为关空调）
+//（隐藏->显示）调温界面或修改调温界面中间元素为（--- -> 26℃）
+    //风速栏风速条默认中风速，低中风速涂颜色，风速文字显示
+//目前累计费用（--元 -> 0元）
+//制冷默认打开（调用coolButton）
+    document.getElementById('statusText').textContent = '运行中';
+    document.getElementById('switch').textContent = '关空调';
+    document.getElementById('targetTemp').textContent = String(targetTemp);
+    
+    document.getElementById('expenses').textContent = '0';
 
+}
+function shutdownfront(){
+    document.getElementById('statusText').textContent = '关机';
+    document.getElementById('switch').textContent = '开空调';
+    document.getElementById('targetTemp').textContent = '---';
+
+    document.getElementById('expenses').textContent = '--';
+}
 function tempAdd(){//空调升温
     clearTimeout(mytimer);
     //点击后先停止上一个时钟
@@ -48,15 +87,10 @@ function windspeedAdjust(){//风速调节
     //显示当前风速
 }
 function ACSwitch(){//空调开关机（以关机->开机为例）
-    if(1){
-    //界面
-        //修改上方状态栏（关机->运行中）
-        //修改温度界面（开空调改为关空调）
-        //（隐藏->显示）调温界面或修改调温界面中间元素为（--- -> 26℃）
-        //风速栏风速条默认中风速，低中风速涂颜色，风速文字显示
-        //目前累计费用（--元 -> 0元）
-        //制冷默认打开（调用coolButton）
-
+    var status = document.getElementById('status').getAttribute('value');
+    if(!status){
+        btnFuncAdd();
+        bootfront();
     //通信
         //开机并发送当前房间温度给后端
         axios.post('boot/',{roomid: roomid,temp: temp})
@@ -67,6 +101,8 @@ function ACSwitch(){//空调开关机（以关机->开机为例）
             console.log("error");
         });
     }else{
+        btnFuncCease();
+        shutdownfront();
         axios.post('shutdown/',{roomid: roomid})
         .then(response =>{
             console.log(response.data);
