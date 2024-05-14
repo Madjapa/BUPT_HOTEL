@@ -92,12 +92,20 @@ def test(request):
     if request.method == 'POST':
         data = json.loads(request.body.decode('utf-8'))
         roomid = data.get('roomid')
-        temp = data.get('targetTemp')
+        temp = data.get('temp')
     print(request.body)
-    print("roomid" + roomid + " temp" + temp )
+    print("roomid " + str(roomid) + " temp " + str(temp) )
     response = {'message': 'POST已处理'}
     return JsonResponse(response)
-        
+def boot(request):
+    if request.method == 'POST':
+        data = json.loads(request.body.decode('utf-8'))
+        roomid = data.get('roomid')
+        roomtemp = data.get('roomtemp')
+    print(request.body)
+    print("roomid " + str(roomid) + " temp " + str(roomtemp) )
+    response = {'message': 'POST已处理'}
+    return JsonResponse(response)
 # 空调控制面板通信
 # 1.房间空调处于服务队列时，计算并向后端更新房间温度
 # 2.房间空调处于服务队列时，计算并向后端更新累计费用
