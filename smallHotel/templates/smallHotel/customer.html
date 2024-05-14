@@ -164,9 +164,11 @@
                     <center>当前风速</center>
                 </text>
             </div>
+            <div>当前的风速是<p></p></div>
+            <div>
             <div id="mode_panel">
-                <button type="button" id="cool_button"><b>制冷</b></button>
-                <button type="button" id="heat_button"><b>制热</b></button>
+                    <button type="button" id="cool_button"><span>制冷</span></button>
+                    <button type="button" id="heat_button"><span>制热</span></button>
             </div>
         </div>
         <div id="cost_rule_panel">
@@ -175,9 +177,8 @@
             <br>2
         </div>
         <div id="current_cost_panel">
-            当前累计费用
-            <br>1
-            <br>2
+            <p>当前累计费用</p>
+            <div>{{expenses}}</div>
         </div>
     </div>
 </body>

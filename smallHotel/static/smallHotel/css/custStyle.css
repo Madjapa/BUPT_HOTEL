@@ -28,10 +28,13 @@ div#sub_panel{
   width:calc(50vw);
   float:left;
 }
+/*
+url('../img/snow.jpg')
+*/
 div#speed_panel{
   height:calc(30vh);
   width:calc(50vw);
-  background-color:#AAD700;
+  background:#AAD700;
 }
 div#mode_panel{
   height:calc(30vh);
