@@ -4,6 +4,9 @@
 <head>
     <meta charset="utf-8">
     <title>顾客界面</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'smallHotel/css/custStyle.css' %}">
+    <script type="text/javascript" src="{% static 'smallHotel/js/customer.js' %}"></script>
 </head>
 
 <body onselectstart="return false">
@@ -15,35 +18,34 @@
     <div id="total_page">
 
         <div id="main_panel">
-            <button type="button" id="current_temp_button">
+            <button type="button" id="current_temp_button" onclick="ACSwitch()">
                 <span>{{roomtemp}}</span>
                 <span>室内温度</span>
                 <br>点我开关空调
             </button>
             <div>
-                <button type="button" id="target_temp_sub_button"><span>-</span></button>
+                <button type="button" id="target_temp_sub_button" onclick="tempSub()"><span>-</span></button>
                 <button type="button" id="submit_temp_button"><span>目标温度</span></button>
-                <button type="button" id="target_temp_sub_button"><span>+</span></button>
+                <button type="button" id="target_temp_add_button" onclick="tempAdd()"><span>+</span></button>
                 <br>
             </div>
         </div>
         <div id="sub_panel">
             <div id="speed_panel">
                 当前风速
-                <button type="button" id="low_speed_button"><span>低风速</span></button>
-                <button type="button" id="middle_speed_button"><span>中风速</span></button>
-                <button type="button" id="high_speed_button"><span>高风速</span></button>
+                <button type="button" id="low_speed_button" onclick="windspeedAdjust()"><span>低风速</span></button>
+                <button type="button" id="middle_speed_button" onclick="windspeedAdjust()"><span>中风速</span></button>
+                <button type="button" id="high_speed_button" onclick="windspeedAdjust()"><span>高风速</span></button>
             </div>
             <div>
                 <text id="current_speed_text">
                     <center>当前风速</center>
                 </text>
             </div>
-            <div>当前的风速是<p></p></div>
             <div>
             <div id="mode_panel">
-                    <button type="button" id="cool_button"><span>制冷</span></button>
-                    <button type="button" id="heat_button"><span>制热</span></button>
+                    <button type="button" id="cool_button" onclick="coolButton()"><span>制冷</span></button>
+                    <button type="button" id="heat_button" onclick="heatButton()"><span>制热</span></button>
             </div>
         </div>
         <div id="cost_rule_panel">
