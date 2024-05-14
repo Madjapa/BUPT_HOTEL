@@ -1,8 +1,12 @@
 
 function tempAdd(){//空调升温
+    clearTimeout(mytimer);
     //点击后先停止上一个时钟
+    targetTemp = targetTemp + 1;
     //目标温度+1
+    alert(targetTemp);
     //显示在温度调节器上
+    mytimer = setTimeout(test());
     //计时，计时结束前若时钟没有被停止则执行tempSubmit()
 }
 function tempSub(){//空调降温
@@ -38,3 +42,10 @@ function ACSwitch(){//空调开关机（以关机->开机为例）
     //通信
         //发送当前房间温度给后端
 }
+function test(){
+    alert("now temp is" + temp);
+}
+var temp = 21;//初始房间温度
+var targetTemp = 26;//缺省目标温度
+var mytimer;
+
