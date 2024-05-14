@@ -3,13 +3,15 @@ class Hotel:
     manager = None
     reception = None
     schedule = None
+    rooms = None
 
     def __init__(self):
         if Hotel.__instance is None:
             Hotel.__instance = self
             Hotel.manager = Manager("syb")
             Hotel.reception = Reception("syb")
-            Hotel.schedule = Schedule
+            Hotel.schedule = Schedule()
+            Hotel.rooms = [Room(), Room(), Room(), Room(), Room()]
         else:
             return
 
@@ -36,7 +38,7 @@ class Reception:
     def __init__(self, name):
         self.name = name
         self.customers = []
-        self.rooms = [Room(), Room(), Room(), Room(), Room()]
+        self.rooms = Hotel.get_instance().rooms
 
     # def check_in(self):
     #     return
@@ -90,6 +92,7 @@ class Reception:
         for i in self.rooms:
             if i.id == room_id:
                 i.state = False
+        # return something
 
 
 # 管理员
@@ -120,16 +123,16 @@ class DetailRecord:
 
 # 客房
 class Room:
-    def __init__(self, id, speed, time, temp, state, schedule):
+    def __init__(self, id, speed, time, temp, state):
         self.id = id
         self.speed = speed  # 风速
         self.time = time
         self.temp = temp  # 温度
         self.state = state
-        self.schedule = schedule
+        self.schedule = Hotel.get_instance().schedule
 
-    def power_on(self, room_id, current_room_temp):
-        self.schedule.request(room_id)
+    def power_on(self, current_room_temp):
+        self.schedule.request(self.room_id)
         pass
 
     # def request_number(self, service_number):
@@ -171,30 +174,30 @@ class Schedule:
         pass
 
     def clear(self, room_id):
-        for i in self.schedule.wait_queue:
+        for i in self.wait_queue:
             if i.room_id == room_id:
                 self.wait_queue.remove(i)
                 return
-        for i in self.schedule.serve_queue:
+        for i in self.serve_queue:
             if i.room_id == room_id:
                 self.serve_queue.remove(i)
         pass
 
     def change_target_temp(self, room_id, target_temp):
-        for i in self.schedule.wait_queue:
+        for i in self.wait_queue:
             if i.room_id == room_id:
                 i.target_temp = target_temp
                 return
-        for i in self.schedule.serve_queue:
+        for i in self.serve_queue:
             if i.room_id == room_id:
                 i.change_target_temp(room_id, target_temp)
 
     def change_speed(self, room_id, speed):
-        for i in self.schedule.wait_queue:
+        for i in self.wait_queue:
             if i.room_id == room_id:
                 i.speed = speed
                 return
-        for i in self.schedule.serve_queue:
+        for i in self.serve_queue:
             if i.room_id == room_id:
                 i.change_speed(room_id, speed)
 
