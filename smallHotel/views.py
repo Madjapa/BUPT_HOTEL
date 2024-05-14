@@ -86,6 +86,8 @@ def monitor(request):
 
 import json
 from django.http import JsonResponse
+
+
 def test(request):
     if request.method == 'POST':
         data = json.loads(request.body.decode('utf-8'))
