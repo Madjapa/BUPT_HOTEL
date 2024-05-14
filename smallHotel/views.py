@@ -84,7 +84,7 @@ def manager(request):
 def monitor(request):
     return render(request,"smallHotel/monitor")
 
-import json,requests
+import json
 from django.http import JsonResponse
 def test(request):
     if request.method == 'POST':
