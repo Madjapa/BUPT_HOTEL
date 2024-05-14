@@ -11,7 +11,7 @@ class Hotel:
             Hotel.manager = Manager("syb")
             Hotel.reception = Reception("syb")
             Hotel.schedule = Schedule()
-            Hotel.rooms = [Room(), Room(), Room(), Room(), Room()]
+            Hotel.rooms = [Room(0), Room(1), Room(2), Room(3), Room(4)]
         else:
             return
 
@@ -123,16 +123,25 @@ class DetailRecord:
 
 # 客房
 class Room:
-    def __init__(self, id, speed, time, temp, state):
+    # def __init__(self, id, speed, time, temp, state):
+    #     self.id = id
+    #     self.speed = speed  # 风速
+    #     self.time = time
+    #     self.temp = temp  # 温度
+    #     self.state = state
+    #     self.schedule = Hotel.get_instance().schedule
+
+    def __init__(self, id):
         self.id = id
-        self.speed = speed  # 风速
-        self.time = time
-        self.temp = temp  # 温度
-        self.state = state
+        self.speed = 0
+        self.time = 0
+        self.temp = 0
+        self.target_temp = 0
+        self.state = 0
         self.schedule = Hotel.get_instance().schedule
 
     def power_on(self, current_room_temp):
-        self.schedule.request(self.room_id)
+        self.schedule.request(self.id)
         pass
 
     # def request_number(self, service_number):
@@ -148,9 +157,9 @@ class Room:
         return True  # return isOK
         pass
 
-    def power_off(self, room_id):
+    def power_off(self):
         self.schedule = None
-        self.schedule.clear(room_id)
+        self.schedule.clear(id)
         pass
 
     def request_state(self, room_id):
@@ -159,18 +168,19 @@ class Room:
 
 # 调度
 class Schedule:
-    def __init__(self, room_id):
+    def __init__(self):
         # self.room_id = room_id
         self.wait_queue = []
         self.serve_queue = []
 
-    def request(self, room_id, target_temp):
+    def request(self, room_id, target_temp = 30):
         if len(self.serve_queue) < 3:
             serve_item = ServeItem(room_id, target_temp)
             self.serve_queue.append(serve_item)
         else:
             wait_item = WaitItem(room_id, target_temp)
             self.wait_queue.append(wait_item)
+        print(self.serve_queue)
         pass
 
     def clear(self, room_id):
