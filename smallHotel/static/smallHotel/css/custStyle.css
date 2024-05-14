@@ -1,55 +1,140 @@
-div#total_page{
-  display: grid;
-  grid-template-columns: auto auto;
+body {
+  margin: 0;
 }
 
-div#main_panel{
-  height:calc(60vh);
-  width:calc(50vw);
-  float:left;
+div#total_page {
+  display: grid;
+  grid-template-columns: auto auto;
+
 }
-#current_temp_button{
-  position:relative;
-  height:calc(50vh);
-  width:calc(50vh);
-  border-radius: calc(25vh); 
-  background-color:#10e4fe;
-  border: 2px solid grey;
+
+div#main_panel {
+  height: calc(60vh);
+  width: calc(50vw);
+  float: left;
+  text-align: center;
+}
+
+#current_temp_button {
+  position: relative;
+  height: calc(50vh);
+  width: calc(50vh);
+  border-radius: calc(30vh);
+  background: linear-gradient(to right, #1aa3ff, #ccebff);
+  border: 2px solid #99d6ff;
   -webkit-transition-duration: 0.4s;
   transition-duration: 0.4s;
 }
+
 #current_temp_button:hover {
-    background-color: #00D0fe;
-    color: white;
+  width: calc(56vh);
+  color: #0099cc;
 }
 
-div#sub_panel{
-  height:calc(60vh);
-  width:calc(50vw);
-  float:left;
+#current_temp_button:active {
+  -webkit-transition-duration: 0.05s;
+  transition-duration: 0.05s;
+  color: #FFFFFF;
 }
-/*
-url('../img/snow.jpg')
-*/
-div#speed_panel{
-  height:calc(30vh);
-  width:calc(50vw);
-  background:#AAD700;
+
+#main_panel div {
+  margin-top: 10px;
 }
-div#mode_panel{
-  height:calc(30vh);
-  width:calc(50vw);
-  background-color:#BAA760;
+
+#target_temp_sub_button {
+  height: 40px;
+  width: 40px;
+  background-color: ＃C0C0C0;
 }
-div#cost_rule_panel{
-  height:calc(30vh);
-  width:calc(50vw);
-  background-color:#1AA725;
-  float:left;
+
+#target_temp_add_button {
+  height: 40px;
+  width: 40px;
+  background-color: ＃C0C0C0;
 }
-div#current_cost_panel{
-  height:calc(30vh);
-  width:calc(50vw);
-  background-color:#872225;
-  float:left;
+
+#submit_temp_button {
+  height: 40px;
+  width: 80px;
+  background-color: ＃C0C0C0;
+}
+
+div#sub_panel {
+  height: calc(60vh);
+  width: calc(50vw);
+}
+
+div#speed_panel {
+  position: relative;
+  min-height: calc(35vh);
+  width: calc(50vw);
+  text-align: center;
+
+}
+
+#speed_panel button {
+  -webkit-transition-duration: 0.4s;
+  transition-duration: 0.4s;
+}
+
+#speed_panel button:hover {
+  height: calc(30vh);
+  color: #0099cc;
+}
+
+#speed_panel button:active {
+  -webkit-transition-duration: 0.05s;
+  transition-duration: 0.05s;
+  color: #FFFFFF;
+}
+
+#low_speed_button {
+  height: calc(10vh);
+  width: calc(5vw);
+  background: linear-gradient(to right, #ccebff, #80ccff);
+  border: 2px solid #99d6ff;
+  vertical-align: bottom;
+}
+
+#middle_speed_button {
+  height: calc(20vh);
+  width: calc(5vw);
+  background: linear-gradient(to right, #80ccff, #33adff);
+  border: 2px solid #99d6ff;
+  vertical-align: bottom;
+}
+
+#high_speed_button {
+  height: calc(30vh);
+  width: calc(5vw);
+  background: linear-gradient(to right, #33adff, #008ae6);
+  border: 2px solid #99d6ff;
+  margin-top: calc(5vh);
+  vertical-align: bottom;
+}
+
+div#mode_panel {
+  height: calc(25vh);
+  width: calc(50vw);
+  line-height: calc(25vh);
+  text-align: center;
+}
+
+#mode_panel button {
+  height: calc(10vh);
+  width: calc(10vh);
+}
+
+div#cost_rule_panel {
+  height: calc(30vh);
+  width: calc(50vw);
+  float: left;
+  text-align: center;
+}
+
+div#current_cost_panel {
+  height: calc(30vh);
+  width: calc(50vw);
+  float: left;
+  text-align: center;
 }
