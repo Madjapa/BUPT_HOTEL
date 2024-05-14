@@ -92,9 +92,9 @@ def test(request):
     if request.method == 'POST':
         data = json.loads(request.body.decode('utf-8'))
         roomid = data.get('roomid')
-        temp = data.get('targetTemp')
+        temp = data.get('temp')
     print(request.body)
-    print("roomid" + roomid + " temp" + temp )
+    print("roomid " + str(roomid) + " temp " + str(temp) )
     response = {'message': 'POST已处理'}
     return JsonResponse(response)
         
