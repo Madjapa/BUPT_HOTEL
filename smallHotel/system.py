@@ -1,3 +1,24 @@
+class Hotel:
+    __instance = None
+    manager = None
+    reception = None
+    schedule = None
+    def __init__(self):
+        if Hotel.__instance is None:
+            Hotel.__instance = self
+            Hotel.manager = Manager("syb")
+            Hotel.reception = Reception("syb")
+            Hotel.schedule = Schedule
+        else:
+            return
+    
+    @staticmethod
+    def get_instance():
+        if not Hotel.__instance:
+            Hotel()
+        return Hotel.__instance
+
+
 #顾客类
 class Customer:
     def __init__(self, name, num, id):
