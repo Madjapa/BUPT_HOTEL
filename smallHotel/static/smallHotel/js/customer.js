@@ -5,13 +5,13 @@ const axiosInstance = axios.create({
     }
 });
 function btnFuncAdd(){//给button添加点击事件
-    document.getElementById('target_temp_sub_button').setAttribute("onclick","tempAdd");
-    document.getElementById('target_temp_add_button').setAttribute("onclick","tempSub");
-    document.getElementById('low_speed_button').setAttribute("onclick","windspeedAdjust");
-    document.getElementById('middle_speed_button').setAttribute("onclick","windspeedAdjust");
-    document.getElementById('high_speed_button').setAttribute("onclick","windspeedAdjust");
-    document.getElementById('cool_button').setAttribute("onclick","coolButton");
-    document.getElementById('heat_button').setAttribute("onclick","heatButton");
+    document.getElementById('target_temp_sub_button').setAttribute("onclick","tempSub()");
+    document.getElementById('target_temp_add_button').setAttribute("onclick","tempAdd()");
+    document.getElementById('low_speed_button').setAttribute("onclick","windspeedAdjust()");
+    document.getElementById('middle_speed_button').setAttribute("onclick","windspeedAdjust()");
+    document.getElementById('high_speed_button').setAttribute("onclick","windspeedAdjust()");
+    document.getElementById('cool_button').setAttribute("onclick","coolButton()");
+    document.getElementById('heat_button').setAttribute("onclick","heatButton()");
 }
 function btnFuncCease(){//删除button的点击事件
     document.getElementById('target_temp_sub_button').removeAttribute("onclick");
@@ -49,7 +49,7 @@ function tempAdd(){//空调升温
     //点击后先停止上一个时钟
     targetTemp = targetTemp + 1;
     //目标温度+1
-    console.log(targetTemp);        //需要修改
+    document.getElementById('targetTemp').textContent = String(targetTemp);
     //显示在温度调节器上
     mytimer = setTimeout(tempSubmit,2000);
     //计时，计时结束前若时钟没有被停止则执行tempSubmit()
@@ -59,7 +59,7 @@ function tempSub(){//空调降温
     //点击后先停止上一个时钟
     targetTemp = targetTemp - 1;
     //目标温度-1
-    console.log(targetTemp);        //需要修改
+    document.getElementById('targetTemp').textContent = String(targetTemp);
     //显示在温度调节器上
     mytimer = setTimeout(tempSubmit,2000);
     //计时，计时结束前若时钟没有被停止则执行tempSubmit()
@@ -87,8 +87,9 @@ function windspeedAdjust(){//风速调节
     //显示当前风速
 }
 function ACSwitch(){//空调开关机（以关机->开机为例）
-    var status = document.getElementById('status').getAttribute('value');
-    if(!status){
+    var status = document.getElementById('status');
+    if(status.getAttribute('value')=='0'){
+        status.setAttribute('value','1');
         btnFuncAdd();
         bootfront();
     //通信
@@ -101,6 +102,7 @@ function ACSwitch(){//空调开关机（以关机->开机为例）
             console.log("error");
         });
     }else{
+        status.setAttribute('value','0');
         btnFuncCease();
         shutdownfront();
         axios.post('shutdown/',{roomid: roomid})
