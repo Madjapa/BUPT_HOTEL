@@ -12,7 +12,7 @@
 
 <body onselectstart="return false">
     <div id="status" value="0">
-        <p>
+        <p id="statusText">
             <center>关机</center>
         </p>
     </div>
@@ -22,11 +22,11 @@
             <button type="button" id="current_temp_button" onclick="ACSwitch()">
                 <span id="roomtemp"></span>
                 <span>室内温度</span>
-                <br>点我开关空调
+                <span id="switch">开空调<span>
             </button>
             <div>
                 <button type="button" id="target_temp_sub_button"><span>-</span></button>
-                <button type="button" id="submit_temp_button"><span>目标温度</span></button>
+                <button type="button" id="submit_temp_button" disabled><span id="targetTemp">---</span><span>℃</span></button>
                 <button type="button" id="target_temp_add_button"><span>+</span></button>
                 <br>
             </div>
@@ -51,7 +51,7 @@
         </div>
         <div id="current_cost_panel">
             <p>当前累计费用</p>
-            <div id="expenses"></div>
+            <div><div id="expenses">--</div>元</div>
         </div>
     </div>
 </body>
