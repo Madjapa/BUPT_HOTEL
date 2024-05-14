@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>顾客界面</title>
+
+    <style>
+        div#total_page{
+          display: grid;
+          grid-template-columns: auto auto;
+        }
+        
+        div#main_panel{
+          height:calc(60vh);
+          width:calc(50vw);
+          float:left;
+        }
+        #current_temp_button{
+          position:relative;
+          height:calc(50vh);
+          width:calc(50vh);
+          border-radius: calc(25vh); 
+          background-color:#10e4fe;
+          border: 2px solid grey;
+          -webkit-transition-duration: 0.4s;
+          transition-duration: 0.4s;
+        }
+        #current_temp_button:hover {
+            background-color: #00D0fe;
+            color: white;
+        }
+        
+        div#sub_panel{
+          height:calc(60vh);
+          width:calc(50vw);
+          float:left;
+        }
+        div#speed_panel{
+          height:calc(30vh);
+          width:calc(50vw);
+          background-color:#AAD700;
+        }
+        div#mode_panel{
+          height:calc(30vh);
+          width:calc(50vw);
+          background-color:#BAA760;
+        }
+        div#cost_rule_panel{
+          height:calc(30vh);
+          width:calc(50vw);
+          background-color:#1AA725;
+          float:left;
+        }
+        div#current_cost_panel{
+          height:calc(30vh);
+          width:calc(50vw);
+          background-color:#872225;
+          float:left;
+        }
+    </style>
+</head>
+
+<body>
+    <div>
+        <p>
+            <center>这里是运行状态</center>
+        </p>
+    </div>
+    <div id="total_page">
+
+        <div id="main_panel">
+            <center><button type="button" id="current_temp_button"><b>室内温度</b>
+                    <br>点我开关空调
+                </button>
+                <div>
+                    <button type="button" id="target_temp_sub_button"><b>-</b></button>
+                    <text id='target_temp_text'><b>目标温度</b></text>
+                    <button type="button" id="target_temp_sub_button"><b>+</b></button>
+                    <br>
+                </div>
+            </center>
+        </div>
+        <div id="sub_panel">
+            <div id="speed_panel">
+                <center>
+                    风速
+                    <button type="button" id="low_speed_button"><b>低风</b></button>
+                    <button type="button" id="middle_speed_button"><b>中风</b></button>
+                    <button type="button" id="high_speed_button"><b>高风</b></button>
+                </center>
+            </div>
+            <div id="mode_panel">
+                <center>
+                    <button type="button" id="cool_button"><b>制冷</b></button>
+                    <button type="button" id="heat_button"><b>制热</b></button>
+                </center>
+            </div>
+        </div>
+        <div id="cost_rule_panel">
+            <center>计费规则</center>
+            <br>1
+            <br>2
+        </div>
+        <div id="current_cost_panel">
+            <center>当前累计费用</center>
+            <br>1
+            <br>2
+        </div>
+    </div>
+</body>
+
+</html>
