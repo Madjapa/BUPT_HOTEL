@@ -75,7 +75,7 @@ def reception(request):
 
 #顾客页面
 def customer(request):
-    return render(request, "smallHotel/customer.html")
+    return render(request, "smallHotel/customer.html",{'expenses': 0})
 
 #酒店管理员
 def manager(request):
