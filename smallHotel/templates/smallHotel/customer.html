@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>顾客界面</title>
+
+    <style>
+        body{
+            margin:0;//body外边距设为0；
+        }
+        
+        div#total_page{
+                  display: grid;
+                  grid-template-columns: auto auto;
+        
+                }
+                
+                div#main_panel{
+                  height:calc(60vh);
+                  width:calc(50vw);
+                  float:left;
+                  text-align:center;
+                }
+        
+        #current_temp_button{
+                  position:relative;
+                  height:calc(50vh);
+                  width:calc(50vh);
+                  border-radius: calc(30vh); 
+                  background: linear-gradient(to right, #1aa3ff, #ccebff);
+                	border: 2px solid #99d6ff;
+                  -webkit-transition-duration: 0.4s;
+                  transition-duration: 0.4s;
+                }
+                #current_temp_button:hover {
+                  width:calc(56vh);
+                  color: #0099cc;
+                }
+        #current_temp_button:active {
+          -webkit-transition-duration: 0.05s;
+                  transition-duration: 0.05s;
+          color: #FFFFFF;
+        }
+        #main_panel div{
+          margin-top:10px;
+        } 
+        #target_temp_sub_button{
+          height:40px;
+          width:40px;
+          background-color:＃C0C0C0;
+        }    
+        #target_temp_add_button{
+          height:40px;
+          width:40px;
+          background-color:＃C0C0C0;
+        }  
+        #submit_temp_button{
+          height:40px;
+          width:80px;
+          background-color:＃C0C0C0;
+        }   
+                div#sub_panel{
+                  height:calc(60vh);
+                  width:calc(50vw);
+                }
+                div#speed_panel{
+                  position: relative;
+                  min-height:calc(35vh);
+                  width:calc(50vw);
+                  text-align:center;
+        
+                }
+        #speed_panel button {
+                  -webkit-transition-duration: 0.4s;
+                  transition-duration: 0.4s;
+                }
+        #speed_panel button:hover {
+          height:calc(30vh);
+                  color: #0099cc;
+                }
+        #speed_panel button:active {
+          -webkit-transition-duration: 0.05s;
+                  transition-duration: 0.05s;
+          color: #FFFFFF;
+        }
+        #low_speed_button{
+        	height:calc(10vh);
+        width:calc(5vw);
+          background: linear-gradient(to right, #ccebff, #80ccff);
+                  	border: 2px solid #99d6ff;
+          vertical-align: bottom;
+        }
+        #middle_speed_button{
+        	height:calc(20vh);
+        width:calc(5vw);
+          background: linear-gradient(to right, #80ccff, #33adff);
+                	border: 2px solid #99d6ff;
+          vertical-align: bottom;
+        }
+        #high_speed_button{
+        	height:calc(30vh);
+          width:calc(5vw);
+            background: linear-gradient(to right, #33adff, #008ae6);
+                  	border: 2px solid #99d6ff;
+          margin-top:calc(5vh);
+          vertical-align: bottom;
+        }
+                div#mode_panel{
+                  height:calc(25vh);
+                  width:calc(50vw);
+                  line-height:calc(25vh);
+                  text-align:center;
+                }
+        #mode_panel button{
+        	height:calc(10vh);
+        	width:calc(10vh);
+        }
+        
+                div#cost_rule_panel{
+                  height:calc(30vh);
+                  width:calc(50vw);
+                  float:left;
+                  text-align:center;
+                }
+                div#current_cost_panel{
+                  height:calc(30vh);
+                  width:calc(50vw);
+                  float:left;
+                  text-align:center;
+                }
+    </style>
+</head>
+
+<body onselectstart="return false">
+    <div>
+        <p>
+            <center>这里是运行状态</center>
+
+        </p>
+    </div>
+    <div id="total_page">
+
+        <div id="main_panel">
+            <button type="button" id="current_temp_button"><b>室内温度</b>
+                <br>点我开关空调
+            </button>
+            <div>
+                <button type="button" id="target_temp_sub_button"><b>-</b></button>
+                <button type="button" id="submit_temp_button"><b>目标温度</b></button>
+                <button type="button" id="target_temp_sub_button"><b>+</b></button>
+                <br>
+            </div>
+        </div>
+        <div id="sub_panel">
+            <div id="speed_panel">
+                当前风速
+                <button type="button" id="low_speed_button"><b>低风速</b></button>
+                <button type="button" id="middle_speed_button"><b>中风速</b></button>
+                <button type="button" id="high_speed_button"><b>高风速</b></button>
+            </div>
+            <div>
+                <text id="current_speed_text">
+                    <center>当前风速</center>
+                </text>
+            </div>
+            <div>当前的风速是<p></p></div>
+            <div>
+            <div id="mode_panel">
+                    <button type="button" id="cool_button"><span>制冷</span></button>
+                    <button type="button" id="heat_button"><span>制热</span></button>
+            </div>
+        </div>
+        <div id="cost_rule_panel">
+            计费规则
+            <br>1
+            <br>2
+        </div>
+        <div id="current_cost_panel">
+            <p>当前累计费用</p>
+            <div>{{expenses}}</div>
+        </div>
+    </div>
+</body>
+
+</html>

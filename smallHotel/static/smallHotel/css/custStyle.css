@@ -1,0 +1,55 @@
+div#total_page{
+  display: grid;
+  grid-template-columns: auto auto;
+}
+
+div#main_panel{
+  height:calc(60vh);
+  width:calc(50vw);
+  float:left;
+}
+#current_temp_button{
+  position:relative;
+  height:calc(50vh);
+  width:calc(50vh);
+  border-radius: calc(25vh); 
+  background-color:#10e4fe;
+  border: 2px solid grey;
+  -webkit-transition-duration: 0.4s;
+  transition-duration: 0.4s;
+}
+#current_temp_button:hover {
+    background-color: #00D0fe;
+    color: white;
+}
+
+div#sub_panel{
+  height:calc(60vh);
+  width:calc(50vw);
+  float:left;
+}
+/*
+url('../img/snow.jpg')
+*/
+div#speed_panel{
+  height:calc(30vh);
+  width:calc(50vw);
+  background:#AAD700;
+}
+div#mode_panel{
+  height:calc(30vh);
+  width:calc(50vw);
+  background-color:#BAA760;
+}
+div#cost_rule_panel{
+  height:calc(30vh);
+  width:calc(50vw);
+  background-color:#1AA725;
+  float:left;
+}
+div#current_cost_panel{
+  height:calc(30vh);
+  width:calc(50vw);
+  background-color:#872225;
+  float:left;
+}
