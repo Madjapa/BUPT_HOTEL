@@ -10,40 +10,37 @@
     <div>
         <p>
             <center>这里是运行状态</center>
+
         </p>
     </div>
     <div id="total_page">
 
         <div id="main_panel">
-            <button type="button" id="current_temp_button">
-                <span>{{roomtemp}}</span>
-                <span>室内温度</span>
+            <button type="button" id="current_temp_button"><b>室内温度</b>
                 <br>点我开关空调
             </button>
             <div>
-                <button type="button" id="target_temp_sub_button"><span>-</span></button>
-                <button type="button" id="submit_temp_button"><span>目标温度</span></button>
-                <button type="button" id="target_temp_sub_button"><span>+</span></button>
+                <button type="button" id="target_temp_sub_button"><b>-</b></button>
+                <button type="button" id="submit_temp_button"><b>目标温度</b></button>
+                <button type="button" id="target_temp_sub_button"><b>+</b></button>
                 <br>
             </div>
         </div>
         <div id="sub_panel">
             <div id="speed_panel">
                 当前风速
-                <button type="button" id="low_speed_button"><span>低风速</span></button>
-                <button type="button" id="middle_speed_button"><span>中风速</span></button>
-                <button type="button" id="high_speed_button"><span>高风速</span></button>
+                <button type="button" id="low_speed_button"><b>低风速</b></button>
+                <button type="button" id="middle_speed_button"><b>中风速</b></button>
+                <button type="button" id="high_speed_button"><b>高风速</b></button>
             </div>
             <div>
                 <text id="current_speed_text">
                     <center>当前风速</center>
                 </text>
             </div>
-            <div>当前的风速是<p></p></div>
-            <div>
             <div id="mode_panel">
-                    <button type="button" id="cool_button"><span>制冷</span></button>
-                    <button type="button" id="heat_button"><span>制热</span></button>
+                <button type="button" id="cool_button"><b>制冷</b></button>
+                <button type="button" id="heat_button"><b>制热</b></button>
             </div>
         </div>
         <div id="cost_rule_panel">
@@ -52,8 +49,9 @@
             <br>2
         </div>
         <div id="current_cost_panel">
-            <p>当前累计费用</p>
-            <div>{{expenses}}</div>
+            当前累计费用
+            <br>1
+            <br>2
         </div>
     </div>
 </body>
