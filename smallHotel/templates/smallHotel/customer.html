@@ -14,7 +14,6 @@
         div#main_panel{
           height:calc(60vh);
           width:calc(50vw);
-          background-color:#10e4fe;
           float:left;
         }
         #current_temp_button{
@@ -24,19 +23,17 @@
           border-radius: calc(25vh); 
           background-color:#10e4fe;
           border: 2px solid grey;
-          -webkit-transition-duration: 0.4s; /* Safari */
+          -webkit-transition-duration: 0.4s;
           transition-duration: 0.4s;
         }
         #current_temp_button:hover {
-            background-color: #00D0fe; /* Green */
+            background-color: #00D0fe;
             color: white;
         }
-        ...
         
         div#sub_panel{
           height:calc(60vh);
           width:calc(50vw);
-          background-color:#10e4fe;
           float:left;
         }
         div#speed_panel{
@@ -88,15 +85,15 @@
             <div id="speed_panel">
                 <center>
                     风速
-                    <button type="button"><b>低风</b></button>
-                    <button type="button"><b>中风</b></button>
-                    <button type="button"><b>高风</b></button>
+                    <button type="button" id="low_speed_button"><b>低风</b></button>
+                    <button type="button" id="middle_speed_button"><b>中风</b></button>
+                    <button type="button" id="high_speed_button"><b>高风</b></button>
                 </center>
             </div>
             <div id="mode_panel">
                 <center>
-                    <button type="button"><b>制冷</b></button>
-                    <button type="button"><b>制热</b></button>
+                    <button type="button" id="cool_button"><b>制冷</b></button>
+                    <button type="button" id="heat_button"><b>制热</b></button>
                 </center>
             </div>
         </div>
