@@ -16,5 +16,7 @@ name    ：https://docs.djangoproject.com/zh-hans/4.2/topics/http/urls/#naming-u
 urlpatterns = [
     path("home/", views.admin, name="homepage"),
     path("rec/",views.reception,name="recept"),
-    path("cus/",views.customer,name="customer")
+    path("cus/",views.customer,name="customer"),
+    path("man/",views.manager,name="manager"),
+    path("mon/",views.monitor,name="monitor")
 ]

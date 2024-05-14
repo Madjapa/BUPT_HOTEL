@@ -28,6 +28,7 @@ class Manager:
         return
     def monitor(self):
         return
+    
 
 #账单
 class Bill:
@@ -75,3 +76,10 @@ def reception(request):
 #顾客页面
 def customer(request):
     return render(request, "smallHotel/customer.html")
+
+#酒店管理员
+def manager(request):
+    return render(request,"smallHotel/manager.html")
+
+def monitor(request):
+    return render(request,"smallHotel/monitor")
