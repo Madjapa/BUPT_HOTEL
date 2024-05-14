@@ -1,5 +1,6 @@
-from django.shortcuts import render,HttpResponse
-
+from django.shortcuts import render
+import json
+from django.http import JsonResponse
 
 #顾客类
 class Customer:
@@ -75,7 +76,7 @@ def reception(request):
 
 #顾客页面
 def customer(request):
-    return render(request, "smallHotel/customer.html",{'expenses': 0})
+    return render(request, "smallHotel/customer.html")
 
 #酒店管理员
 def manager(request):
@@ -83,10 +84,6 @@ def manager(request):
 
 def monitor(request):
     return render(request,"smallHotel/monitor")
-
-import json
-from django.http import JsonResponse
-
 
 def test(request):
     if request.method == 'POST':
