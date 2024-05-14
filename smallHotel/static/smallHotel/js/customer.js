@@ -48,6 +48,8 @@ function windspeedAdjust(){//风速调节
     //显示当前风速
 }
 function ACSwitch(){//空调开关机（以关机->开机为例）
+    var status = document.getElementById('status');
+    alert(status.getAttribute('value'));
     if(1){
     //界面
         //修改上方状态栏（关机->运行中）
@@ -56,6 +58,7 @@ function ACSwitch(){//空调开关机（以关机->开机为例）
         //风速栏风速条默认中风速，低中风速涂颜色，风速文字显示
         //目前累计费用（--元 -> 0元）
         //制冷默认打开（调用coolButton）
+
 
     //通信
         //开机并发送当前房间温度给后端

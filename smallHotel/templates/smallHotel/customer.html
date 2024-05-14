@@ -11,9 +11,9 @@
 </head>
 
 <body onselectstart="return false">
-    <div>
+    <div id="status" value="0">
         <p>
-            <center>这里是运行状态</center>
+            <center>关机</center>
         </p>
     </div>
     <div id="total_page">
@@ -25,18 +25,18 @@
                 <br>点我开关空调
             </button>
             <div>
-                <button type="button" id="target_temp_sub_button" onclick="tempSub()"><span>-</span></button>
+                <button type="button" id="target_temp_sub_button"><span>-</span></button>
                 <button type="button" id="submit_temp_button"><span>目标温度</span></button>
-                <button type="button" id="target_temp_add_button" onclick="tempAdd()"><span>+</span></button>
+                <button type="button" id="target_temp_add_button"><span>+</span></button>
                 <br>
             </div>
         </div>
         <div id="sub_panel">
             <div id="speed_panel">
                 当前风速
-                <button type="button" id="low_speed_button" onclick="windspeedAdjust()"><span>低风速</span></button>
-                <button type="button" id="middle_speed_button" onclick="windspeedAdjust()"><span>中风速</span></button>
-                <button type="button" id="high_speed_button" onclick="windspeedAdjust()"><span>高风速</span></button>
+                <button type="button" id="low_speed_button" ><span>低风速</span></button>
+                <button type="button" id="middle_speed_button" ><span>中风速</span></button>
+                <button type="button" id="high_speed_button" ><span>高风速</span></button>
             </div>
             <div>
                 <text id="current_speed_text">
@@ -45,8 +45,8 @@
             </div>
             <div>
             <div id="mode_panel">
-                    <button type="button" id="cool_button" onclick="coolButton()"><span>制冷</span></button>
-                    <button type="button" id="heat_button" onclick="heatButton()"><span>制热</span></button>
+                    <button type="button" id="cool_button" ><span>制冷</span></button>
+                    <button type="button" id="heat_button" ><span>制热</span></button>
             </div>
         </div>
         <div id="cost_rule_panel">
