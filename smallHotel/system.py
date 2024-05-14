@@ -123,12 +123,14 @@ class DetailRecord:
 
 # 客房
 class Room:
-    # def __init__(self, id, speed, time, temp, state):
+    # def __init__(self, id, time, temp, target_temp):
     #     self.id = id
-    #     self.speed = speed  # 风速
     #     self.time = time
-    #     self.temp = temp  # 温度
-    #     self.state = state
+    #     self.temp = temp
+    #     self.target_temp = target_temp
+    #     self.speed = 1  # 默认中风速
+    #     self.state = False  # 是否有顾客入住
+    #     self.AC_status = False
     #     self.schedule = Hotel.get_instance().schedule
 
     def __init__(self, id):
@@ -169,7 +171,6 @@ class Room:
 # 调度
 class Schedule:
     def __init__(self):
-        # self.room_id = room_id
         self.wait_queue = []
         self.serve_queue = []
 
@@ -191,6 +192,7 @@ class Schedule:
         for i in self.serve_queue:
             if i.room_id == room_id:
                 self.serve_queue.remove(i)
+                return
         pass
 
     def change_target_temp(self, room_id, target_temp):
@@ -201,6 +203,7 @@ class Schedule:
         for i in self.serve_queue:
             if i.room_id == room_id:
                 i.change_target_temp(room_id, target_temp)
+                return
 
     def change_speed(self, room_id, speed):
         for i in self.wait_queue:
@@ -210,6 +213,7 @@ class Schedule:
         for i in self.serve_queue:
             if i.room_id == room_id:
                 i.change_speed(room_id, speed)
+                return
 
 
 # 等待对象?
