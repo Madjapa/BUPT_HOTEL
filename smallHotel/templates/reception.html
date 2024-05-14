@@ -7,11 +7,17 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
+    <style>
+        span{
+            color : red;
+        }
+    </style>
 </head>
 <body>
 <h1>办理入住</h1>
 <div class="row">
         <div class="col-md-8 col-md-offset-2">
+            {% csrf_token %}
             <form action="" method="post">
                 <p>
                     <label for="d1">姓名:</label>
@@ -21,8 +27,7 @@
                     <label for="d2">房间号</label>
                     <input type="text" id='d2' name="room_num" class="form-control">
                 </p>
-                <input type="submit" class="btn btn-success btn-block">
-
+                <input type="submit" class="btn btn-success btn-block"><span>{{ tips }}</span>
             </form>
         </div>
     </div>
