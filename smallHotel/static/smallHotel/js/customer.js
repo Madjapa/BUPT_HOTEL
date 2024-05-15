@@ -5,13 +5,13 @@ const axiosInstance = axios.create({
     }
 });
 function btnFuncAdd(){//给button添加点击事件
-    document.getElementById('target_temp_sub_button').setAttribute("onclick","tempAdd");
-    document.getElementById('target_temp_add_button').setAttribute("onclick","tempSub");
-    document.getElementById('low_speed_button').setAttribute("onclick","windspeedAdjust");
-    document.getElementById('middle_speed_button').setAttribute("onclick","windspeedAdjust");
-    document.getElementById('high_speed_button').setAttribute("onclick","windspeedAdjust");
-    document.getElementById('cool_button').setAttribute("onclick","coolButton");
-    document.getElementById('heat_button').setAttribute("onclick","heatButton");
+    document.getElementById('target_temp_sub_button').setAttribute("onclick","tempSub()");
+    document.getElementById('target_temp_add_button').setAttribute("onclick","tempAdd()");
+    document.getElementById('low_speed_button').setAttribute("onclick","windspeedAdjust()");
+    document.getElementById('middle_speed_button').setAttribute("onclick","windspeedAdjust()");
+    document.getElementById('high_speed_button').setAttribute("onclick","windspeedAdjust()");
+    document.getElementById('cool_button').setAttribute("onclick","coolButton()");
+    document.getElementById('heat_button').setAttribute("onclick","heatButton()");
 }
 function btnFuncCease(){//删除button的点击事件
     document.getElementById('target_temp_sub_button').removeAttribute("onclick");
@@ -33,7 +33,7 @@ function bootfront(){
     document.getElementById('statusText').textContent = '运行中';
     document.getElementById('switch').textContent = '关空调';
     document.getElementById('targetTemp').textContent = String(targetTemp);
-    
+    document.getElementById('roomtemp').textContent = String(temp);
     document.getElementById('expenses').textContent = '0';
 
 }
@@ -41,27 +41,27 @@ function shutdownfront(){
     document.getElementById('statusText').textContent = '关机';
     document.getElementById('switch').textContent = '开空调';
     document.getElementById('targetTemp').textContent = '---';
-
-    document.getElementById('expenses').textContent = '--';
+    document.getElementById('roomtemp').textContent = '---';
+    document.getElementById('expenses').textContent = '---';
 }
 function tempAdd(){//空调升温
-    clearTimeout(mytimer);
+    clearTimeout(tempTimer);
     //点击后先停止上一个时钟
     targetTemp = targetTemp + 1;
     //目标温度+1
-    console.log(targetTemp);        //需要修改
+    document.getElementById('targetTemp').textContent = String(targetTemp);
     //显示在温度调节器上
-    mytimer = setTimeout(tempSubmit,2000);
+    tempTimer = setTimeout(tempSubmit,2000);
     //计时，计时结束前若时钟没有被停止则执行tempSubmit()
 }
 function tempSub(){//空调降温
-    clearTimeout(mytimer);
+    clearTimeout(tempTimer);
     //点击后先停止上一个时钟
     targetTemp = targetTemp - 1;
     //目标温度-1
-    console.log(targetTemp);        //需要修改
+    document.getElementById('targetTemp').textContent = String(targetTemp);
     //显示在温度调节器上
-    mytimer = setTimeout(tempSubmit,2000);
+    tempTimer = setTimeout(tempSubmit,2000);
     //计时，计时结束前若时钟没有被停止则执行tempSubmit()
 }
 function tempSubmit(){
@@ -86,21 +86,51 @@ function windspeedAdjust(){//风速调节
     //被选中风速条从低到该风速条显示颜色，其余为灰色
     //显示当前风速
 }
+function requestExp(){
+    axios.get('getExpenses/',{roomid: roomid})
+    .then(function(response){
+        if(response.data.code == 1){
+            document.getElementById('expenses').textContent = String(response.data.expenses);
+        }
+    })
+    .catch(error =>{
+        console.log("error");
+    });
+}
+function requestRoomtemp(){
+    axios.get('roomTemp/',{roomid: roomid})
+    .then(function(response){
+        if(response.data.code == 1){
+            document.getElementById('roomtemp').textContent = String(response.data.roomtemp);
+        }
+    })
+    .catch(error =>{
+        console.log("error");
+    });
+}
 function ACSwitch(){//空调开关机（以关机->开机为例）
-    var status = document.getElementById('status').getAttribute('value');
-    if(!status){
+    var status = document.getElementById('status');
+    if(status.getAttribute('value')=='0'){
+        status.setAttribute('value','1');
+
         btnFuncAdd();
         bootfront();
     //通信
         //开机并发送当前房间温度给后端
         axios.post('boot/',{roomid: roomid,temp: temp})
-        .then(response =>{
-            console.log(response.data);
+        .then(function(response){
+            if(response.data.code == 1){
+                getExp = setInterval(requestExp,1000);//请求累计费用及房间温度
+                getRoomtemp = setInterval(requestRoomtemp,1000);
+            }
         })
         .catch(error =>{
             console.log("error");
         });
     }else{
+        clearInterval(getExp);
+        clearInterval(getRoomtemp);
+        status.setAttribute('value','0');
         btnFuncCease();
         shutdownfront();
         axios.post('shutdown/',{roomid: roomid})
@@ -117,5 +147,5 @@ function test(){
 }
 var temp = 21;//初始房间温度
 var targetTemp = 26;//缺省目标温度
-var mytimer;
+var tempTimer,getExp,getRoomtemp;
 var roomid = 1;

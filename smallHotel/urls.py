@@ -1,6 +1,6 @@
 from django.urls import path
 
-from . import views
+from . import views,testAC
 
 '''
 path(route, view, kwargs=None, name=None)
@@ -14,15 +14,13 @@ name    ：https://docs.djangoproject.com/zh-hans/4.2/topics/http/urls/#naming-u
 请为每个视图函数添加一个或多个匹配规则以适应需求,不需要/作为前缀
 '''
 urlpatterns = [
-    #path('admin/', admin.site.urls),
-    path('admin/', views.admin),
-    path('reception/',views.reception),
-    path('cus/',views.customer),
-    path('cus/poweron/',views.powerOn),
-    path('cus/poweroff/',views.powerOff),
-    path('cus/temperature/',views.tempSubmit),
-    path('cus/flowsubmit/',views.flowSubmit),
-    path('cus/getbill/',views.getBill),
-    path('cus/gettemp/',views.getTemp),
-    #path('user/list',views.user_list)
+    path("home/", views.admin, name="homepage"),
+    path("rec/",views.reception,name="recept"),
+    path("cus/",views.customer,name="customer"),
+    path("man/",views.manager,name="manager"),
+    path("mon/",views.monitor,name="monitor"),
+    path("cus/temperature/",testAC.test,name="test"),
+    path("cus/boot/",testAC.boot,name="boot"),
+    path("cus/getExpenses/",testAC.getExp,name="xx"),
+    path("cus/roomTemp/",testAC.getroomtemp,name='yy'),
 ]
