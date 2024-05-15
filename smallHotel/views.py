@@ -44,8 +44,18 @@ def boot(request):
         roomtemp = data.get('roomtemp')
     print(request.body)
     print("roomid " + str(roomid) + " temp " + str(roomtemp) )
-    response = {'message': 'POST已处理'}
+    response = {'code': 1}
     return JsonResponse(response)
+def getExp(request):
+    if request.method == 'GET':
+        #data = json.loads(request.body.decode('utf-8'))
+        response = {'code' : 1,'expenses' : '30'}
+        return JsonResponse(response)
+def getroomtemp(request):
+    if request.method == 'GET':
+    #data = json.loads(request.body.decode('utf-8'))
+        response = {'code' : 1,'roomtemp': '27'}
+        return JsonResponse(response)
 # 空调控制面板通信
 # 1.房间空调处于服务队列时，计算并向后端更新房间温度
 # 2.房间空调处于服务队列时，计算并向后端更新累计费用

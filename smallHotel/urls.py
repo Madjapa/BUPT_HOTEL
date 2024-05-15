@@ -21,5 +21,7 @@ urlpatterns = [
     path("mon/",views.monitor,name="monitor"),
     path("cus/temperature/",views.test,name="test"),
     path("cus/boot/",views.boot,name="boot"),
+    path("cus/getExpenses/",views.getExp,name="xx"),
+    path("cus/roomTemp/",views.getroomtemp,name='yy'),
     #path("cus/shutdown/",views.shutdown,name="shutdown"),
 ]
