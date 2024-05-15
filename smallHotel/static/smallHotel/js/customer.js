@@ -87,7 +87,7 @@ function windspeedAdjust(){//风速调节
     //显示当前风速
 }
 function requestExp(){
-    axios.post('getExpenses/',{roomid: roomid})
+    axios.get('getExpenses/',{roomid: roomid})
     .then(response =>{
         console.log(response.data);
     })
@@ -96,7 +96,7 @@ function requestExp(){
     });
 }
 function requestRoomtemp(){
-    axios.post('roomTemp/',{roomid: roomid})
+    axios.get('roomTemp/',{roomid: roomid})
     .then(response =>{
         console.log(response.data);
     })
