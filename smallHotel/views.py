@@ -1,8 +1,7 @@
-from django.shortcuts import render
-import json
+from django.shortcuts import render,HttpResponse
 from django.http import JsonResponse
 from .system import *
-
+import json
 
 # Create your views here.
 #主页
@@ -28,16 +27,31 @@ def manager(request):
 def monitor(request):
     return render(request,"smallHotel/monitor")
 
-def test(request):
+
+def powerOn(request):
+    if request.method == 'POST':
+        data = json.loads(request.body.decode('utf-8'))
+        roomid = data.get('roomid')
+        roomtemp = data.get('roomtemp')
+        Hotel.get_instance().rooms[room__id].power_on(temp)
+        return JsonResponse({'status': 'success'})
+
+def powerOff(request):
+    if request.method == 'POST':
+        data = json.loads(request.body.decode('utf-8'))
+        roomid = data.get('roomid')
+        Hotel.get_instance().rooms[room__id].power_off()
+        return JsonResponse({'status': 'success'})
+
+def tempSubmit(request):
     if request.method == 'POST':
         data = json.loads(request.body.decode('utf-8'))
         roomid = data.get('roomid')
         temp = data.get('temp')
-    print(request.body)
-    print("roomid " + str(roomid) + " temp " + str(temp) )
-    response = {'message': 'POST已处理'}
-    return JsonResponse(response)
-def boot(request):
+        Hotel.get_instance().rooms[roomid].temp = temp
+        return JsonResponse({'code': '1'})
+
+def flowSubmit(request):
     if request.method == 'POST':
         data = json.loads(request.body.decode('utf-8'))
         roomid = data.get('roomid')
