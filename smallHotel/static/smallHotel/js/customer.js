@@ -33,9 +33,9 @@ function bootfront(){
     document.getElementById('statusText').textContent = '运行中';
     document.getElementById('switch').textContent = '关空调';
     document.getElementById('targetTemp').textContent = String(targetTemp);
-    document.getElementById('roomtemp').textContent = String(temp);
-    document.getElementById('expenses').textContent = '0';
-
+    document.getElementById('roomtemp').textContent = '{{temp}}';
+    document.getElementById('expenses').textContent = '{{expenses}}';
+    //document.getElementById('expenses').textContent = '0';
 }
 function shutdownfront(){
     document.getElementById('statusText').textContent = '关机';
@@ -143,7 +143,7 @@ function ACSwitch(){//空调开关机（以关机->开机为例）
     }
 }
 function test(){
-    alert("now temp is" + targetTemp);
+    alert("now temp is" + temp);
 }
 var temp = 21;//初始房间温度
 var targetTemp = 26;//缺省目标温度

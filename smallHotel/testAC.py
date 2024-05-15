@@ -1,7 +1,9 @@
 from django.shortcuts import render,HttpResponse
 from django.http import JsonResponse
+from time import sleep
 from .system import *
 import json
+
 
 def getExp(request):
     if request.method == 'GET':
@@ -21,6 +23,7 @@ def test(request):
 def boot(request):
     if request.method == 'POST':
         data = json.loads(request.body.decode('utf-8'))
+        sleep(3)
         response = {'code': 1}
         return JsonResponse(response)
 # 空调控制面板通信
