@@ -32,7 +32,7 @@ function bootfront(){
 //制冷默认打开（调用coolButton）
     document.getElementById('statusText').textContent = '运行中';
     document.getElementById('switch').textContent = '关空调';
-    document.getElementById('targetTemp').textContent = 'String(targetTemp)';
+    document.getElementById('targetTemp').textContent = String(targetTemp);
     document.getElementById('roomtemp').textContent = String(temp);
     document.getElementById('expenses').textContent = '0';
 
