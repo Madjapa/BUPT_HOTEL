@@ -143,7 +143,6 @@ function ACSwitch(){//空调开关机（以关机->开机为例）
     }
 }
 function test(){
-    alert("now temp is" + temp);
 }
 var temp = 21;//初始房间温度
 var targetTemp = 26;//缺省目标温度
