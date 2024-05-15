@@ -33,8 +33,8 @@ function bootfront(){
     document.getElementById('statusText').textContent = '运行中';
     document.getElementById('switch').textContent = '关空调';
     document.getElementById('targetTemp').textContent = 'String(targetTemp)';
-    document.getElementById('roomtemp').textContent = '{{roomtemp}}';
-    document.getElementById('expenses').textContent = '{{expenses}}';
+    document.getElementById('roomtemp').textContent = String(temp);
+    document.getElementById('expenses').textContent = '0';
 
 }
 function shutdownfront(){
@@ -87,18 +87,22 @@ function windspeedAdjust(){//风速调节
     //显示当前风速
 }
 function requestExp(){
-    axios.post('getExpenses/',{roomid: roomid})
-    .then(response =>{
-        console.log(response.data);
+    axios.get('getExpenses/',{roomid: roomid})
+    .then(function(response){
+        if(response.data.code == 1){
+            document.getElementById('expenses').textContent = String(response.data.expenses);
+        }
     })
     .catch(error =>{
         console.log("error");
     });
 }
 function requestRoomtemp(){
-    axios.post('roomTemp/',{roomid: roomid})
-    .then(response =>{
-        console.log(response.data);
+    axios.get('roomTemp/',{roomid: roomid})
+    .then(function(response){
+        if(response.data.code == 1){
+            document.getElementById('roomtemp').textContent = String(response.data.roomtemp);
+        }
     })
     .catch(error =>{
         console.log("error");
@@ -115,9 +119,9 @@ function ACSwitch(){//空调开关机（以关机->开机为例）
         //开机并发送当前房间温度给后端
         axios.post('boot/',{roomid: roomid,temp: temp})
         .then(function(response){
-            if(response.code == 1){
-                getExp = setInterval(requestMsg,2000);//请求累计费用及房间温度
-                getRoomtemp = setInterval(requestRoomtemp,2000);
+            if(response.data.code == 1){
+                getExp = setInterval(requestExp,1000);//请求累计费用及房间温度
+                getRoomtemp = setInterval(requestRoomtemp,1000);
             }
         })
         .catch(error =>{

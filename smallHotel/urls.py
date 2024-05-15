@@ -14,15 +14,14 @@ name    ：https://docs.djangoproject.com/zh-hans/4.2/topics/http/urls/#naming-u
 请为每个视图函数添加一个或多个匹配规则以适应需求,不需要/作为前缀
 '''
 urlpatterns = [
-    #path('admin/', admin.site.urls),
-    path('admin/', views.admin),
-    path('reception/',views.reception),
-    path('customer/',views.customer),
-    path('customer/poweron/',views.powerOn),
-    path('customer/poweroff/',views.powerOff),
-    path('customer/temperature/',views.tempSubmit),
-    path('customer/flowsubmit/',views.flowSubmit),
-    path('customer/getbill/',views.getBill),
-    path('customer/gettemp/',views.getTemp),
-    #path('user/list',views.user_list)
+    path("home/", views.admin, name="homepage"),
+    path("rec/",views.reception,name="recept"),
+    path("cus/",views.customer,name="customer"),
+    path("man/",views.manager,name="manager"),
+    path("mon/",views.monitor,name="monitor"),
+    path("cus/temperature/",views.test,name="test"),
+    path("cus/boot/",views.boot,name="boot"),
+    path("cus/getExpenses/",views.getExp,name="xx"),
+    path("cus/roomTemp/",views.getroomtemp,name='yy'),
+    #path("cus/shutdown/",views.shutdown,name="shutdown"),
 ]
