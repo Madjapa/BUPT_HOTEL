@@ -210,45 +210,30 @@ class Scheduler:
                 return
 
     def schedule(self, room_id, target_temp, speed):
-        contain_inferior = False
-        contain_same = False
-        for i in self.serve_queue:
-            if i.speed < speed:
-                contain_inferior = True
-                break
-            elif i.speed == speed:
-                contain_same = True
-        if contain_inferior == True:  # 优先级调度
-            replace_room_ids = []
-            count_inferior = 0
-            lowest_speed = 2
-            for i in self.serve_queue:
-                if i.speed < speed:
-                    count_inferior += 1
-                    if i.speed < lowest_speed:
-                        lowest_speed = i.speed
-                        replace_room_ids = []
-                        replace_room_ids.append(i.room_id)
-                    elif i.speed == lowest_speed:
-                        replace_room_ids.append(i.room_id)
-            if count_inferior == 1:
-                replace_room_id = replace_room_ids[0]
-            elif len(replace_room_ids) == 1:
+        if len([i for i in self.serve_queue if i.speed < speed]) != 0:  # 优先级调度
+            replace_room_ids = [
+                i.room_id
+                for i in self.serve_queue
+                if i.speed
+                == (
+                    min(
+                        [i for i in self.serve_queue if i.speed < speed],
+                        key=lambda serve_item: serve_item.speed,
+                    ).speed
+                )
+            ]
+            if len(replace_room_ids) == 1:
                 replace_room_id = replace_room_ids[0]
             else:
-                longest_service_time = 0
-                for i in self.serve_queue:
-                    if (
-                        i.room_id in replace_room_ids
-                        and i.service_time > longest_service_time
-                    ):
-                        longest_service_time = i.service_time
-                        replace_room_id = i.room_id
+                replace_room_id = max(
+                    [i for i in self.serve_queue if i.room_id in replace_room_ids],
+                    key=lambda serve_item: serve_item.service_time,
+                ).room_id
             self.cast_serve_to_wait(replace_room_id)
             serve_item = ServeItem(room_id, target_temp, speed)
             self.serve_queue.append(serve_item)
             return True
-        elif contain_same == True:  # 时间片调度
+        elif len([i for i in self.serve_queue if i.speed == speed]) != 0:  # 时间片调度
             pass
         else:  # 等待
             wait_item = WaitItem(room_id, target_temp, speed)
