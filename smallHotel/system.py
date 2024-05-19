@@ -2,7 +2,7 @@ class Hotel:
     __instance = None
     manager = None
     reception = None
-    schedule = None
+    scheduler = None
     rooms = None
 
     def __init__(self):
@@ -10,7 +10,7 @@ class Hotel:
             Hotel.__instance = self
             Hotel.manager = Manager("syb")
             Hotel.reception = Reception("syb")
-            Hotel.schedule = Schedule()
+            Hotel.scheduler = Scheduler()
             Hotel.rooms = [Room(0), Room(1), Room(2), Room(3), Room(4)]
         else:
             return
@@ -123,45 +123,41 @@ class DetailRecord:
 
 # 客房
 class Room:
-    # def __init__(self, id, time, temp, target_temp):
-    #     self.id = id
-    #     self.time = time
-    #     self.temp = temp
-    #     self.target_temp = target_temp
-    #     self.speed = 1  # 默认中风速
-    #     self.state = False  # 是否有顾客入住
-    #     self.AC_status = False
-    #     self.schedule = Hotel.get_instance().schedule
-
-    def __init__(self, id):
+    def __init__(self, id, time, temp, target_temp):
         self.id = id
-        self.speed = 0
-        self.time = 0
-        self.temp = 0
-        self.target_temp = 0
-        self.state = 0
-        self.schedule = Hotel.get_instance().schedule
+        self.time = time
+        self.temp = temp
+        self.target_temp = target_temp
+        self.speed = 1  # 默认中风速
+        self.state = False  # 是否有顾客入住
+        self.AC_status = False
+        self.scheduler = Hotel.get_instance().scheduler
 
     def power_on(self, current_room_temp):
-        self.schedule.request(self.id)
+        if self.AC_status == False:
+            self.AC_status = self.scheduler.request(
+                self.id, self.id, self.target_temp, self.speed
+            )
         pass
 
     # def request_number(self, service_number):
     #     pass
 
     def change_temp(self, room_id, target_temp):
-        self.schedule.change_target_temp(room_id, target_temp)
+        self.target_temp = target_temp
+        self.scheduler.change_target_temp(room_id, target_temp)
         return True  # return isOK
         pass
 
     def change_speed(self, room_id, speed):
-        self.schedule.change_speed(room_id, speed)
+        self.speed = speed
+        self.scheduler.change_speed(room_id, speed)
         return True  # return isOK
         pass
 
     def power_off(self):
-        self.schedule = None
-        self.schedule.clear(id)
+        self.scheduler = None
+        self.scheduler.clear(id)
         pass
 
     def request_state(self, room_id):
@@ -169,20 +165,18 @@ class Room:
 
 
 # 调度
-class Schedule:
+class Scheduler:
     def __init__(self):
         self.wait_queue = []
         self.serve_queue = []
 
-    def request(self, room_id, target_temp = 30):
+    def request(self, room_id, target_temp, speed):
         if len(self.serve_queue) < 3:
-            serve_item = ServeItem(room_id, target_temp)
+            serve_item = ServeItem(room_id, target_temp, speed)
             self.serve_queue.append(serve_item)
+            return True
         else:
-            wait_item = WaitItem(room_id, target_temp)
-            self.wait_queue.append(wait_item)
-        print(self.serve_queue)
-        pass
+            return self.schedule(room_id, target_temp, speed)
 
     def clear(self, room_id):
         for i in self.wait_queue:
@@ -215,21 +209,79 @@ class Schedule:
                 i.change_speed(room_id, speed)
                 return
 
+    def schedule(self, room_id, target_temp, speed):
+        contain_inferior = False
+        contain_same = False
+        for i in self.serve_queue:
+            if i.speed < speed:
+                contain_inferior = True
+                break
+            elif i.speed == speed:
+                contain_same = True
+        if contain_inferior == True:  # 优先级调度
+            replace_room_ids = []
+            count_inferior = 0
+            lowest_speed = 2  # 高风速
+            for i in self.serve_queue:
+                if i.speed < speed:
+                    count_inferior += 1
+                    replace_room_ids.append(i.room_id)
+                    if i.speed < lowest_speed:
+                        lowest_speed = i.speed
+                        replace_room_ids = []
+                    else:
+                        replace_room_ids.append(i.room_id)
+            if count_inferior == 1:
+                replace_room_id = replace_room_ids[0]
+            elif len(replace_room_ids) == 1:
+                replace_room_id = replace_room_ids[0]
+            else:
+                longest_service_time = 0
+                for i in self.serve_queue:
+                    if (
+                        i.room_id in replace_room_ids
+                        and i.service_time > longest_service_time
+                    ):
+                        longest_service_time = i.service_time
+                        replace_room_id = i.room_id
+            self.cast_serve_to_wait(replace_room_id)
+            serve_item = ServeItem(room_id, target_temp, speed)
+            self.serve_queue.append(serve_item)
+            return True
+        elif contain_same == True:  # 时间片调度
+            pass
+        else:  # 等待
+            wait_item = WaitItem(room_id, target_temp, speed)
+            self.wait_queue.append(wait_item)
+            return False
+        pass
+
+    def cast_serve_to_wait(self, room_id):
+        for i in self.serve_queue:
+            if i.room_id == room_id:
+                self.serve_queue.remove(i)
+                wait_item = WaitItem(i.room_id, i.target_temp, i.speed)
+                self.wait_queue.append(wait_item)
+                return
+
 
 # 等待对象?
 class WaitItem:
-    def __init__(self, room_id, target_temp, speed):
+    def __init__(self, room_id, target_temp, speed, wait_time=2):
         self.room_id = room_id
         self.target_temp = target_temp
         self.speed = speed
+        self.wait_time = wait_time
         pass
 
 
 # 服务对象
 class ServeItem:
-    def __init__(self, room_id, target_temp):
+    def __init__(self, room_id, target_temp, speed):
         self.room_id = room_id
         self.target_temp = target_temp
+        self.speed = speed
+        self.service_time = 0
         pass
 
     def change_target_temp(self, target_temp):
@@ -237,3 +289,6 @@ class ServeItem:
 
     def change_speed(self, speed):
         self.speed = speed
+
+    def generate_detailed_record(self):
+        pass
