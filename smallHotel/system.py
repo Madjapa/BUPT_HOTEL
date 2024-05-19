@@ -221,15 +221,15 @@ class Scheduler:
         if contain_inferior == True:  # 优先级调度
             replace_room_ids = []
             count_inferior = 0
-            lowest_speed = 2  # 高风速
+            lowest_speed = 2
             for i in self.serve_queue:
                 if i.speed < speed:
                     count_inferior += 1
-                    replace_room_ids.append(i.room_id)
                     if i.speed < lowest_speed:
                         lowest_speed = i.speed
                         replace_room_ids = []
-                    else:
+                        replace_room_ids.append(i.room_id)
+                    elif i.speed == lowest_speed:
                         replace_room_ids.append(i.room_id)
             if count_inferior == 1:
                 replace_room_id = replace_room_ids[0]
