@@ -11,7 +11,7 @@ class Hotel:
             Hotel.manager = Manager("syb")
             Hotel.reception = Reception("syb")
             Hotel.scheduler = Scheduler()
-            Hotel.rooms = [Room(0), Room(1), Room(2), Room(3), Room(4)]
+            Hotel.rooms = {0: Room(0), 1: Room(1), 2: Room(2), 3: Room(3), 4: Room(4)}
         else:
             return
 
@@ -22,12 +22,12 @@ class Hotel:
         return Hotel.__instance
 
 
-# 顾客类
+# 顾客
 class Customer:
-    def __init__(self, name, num, id):
-        self.name = name
-        self.num = num  # 房间号?
+    def __init__(self, id, name, num):
         self.id = id
+        self.name = name
+        self.num = num  # ?
 
     # def use(self):
     #     return
@@ -38,7 +38,7 @@ class Reception:
     def __init__(self, name):
         self.name = name
         self.customers = []
-        self.rooms = Hotel.get_instance().rooms
+        self.orders = {}
 
     # def check_in(self):
     #     return
@@ -47,14 +47,17 @@ class Reception:
     #     return
 
     def register_customer_info(self, customer_id, customer_name, number, date):
-        self.customers.append(Customer(customer_name, number, customer_id))
+        self.customers.append(Customer(customer_id, customer_name, number))
         return True  # return isOK
 
     def check_room_state(self, date):
-        return [[i.id, i.state] for i in self.rooms]
+        return {i.id: i.state for i in Hotel.get_instance().rooms.values()}
 
-    def create_accommodation_order(self, customer_id, room__id):
-        pass
+    def create_accommodation_order(self, customer_id, room_id):
+        self.orders.append(Order(customer_id, room_id))
+        room = Hotel.get_instance().rooms[room_id]
+        room.state = True
+        room.customer_id = customer_id
 
     def deposite(self, amount):
         pass
@@ -63,22 +66,43 @@ class Reception:
         pass
 
     def process_checkout(self, room_id):
+        days_of_accommodation, detailed_records_AC = Reception.query_fee_records(
+            room_id,
+        )
+        accommodation_bill = Reception.create_accommodation_bill(
+            room_id,
+        )
+        AC_bill = Reception.create_AC_bill(
+            room_id,
+        )
+        pass
+        Reception.set_room_state(room_id)
+
+    def query_fee_records(room_id, date_out):
         pass
 
-    def query_fee_records(self, room_id, date_out):
-        pass
+    def calculate_accommodation_fee(days_of_accommodation, fee_of_day):
+        return days_of_accommodation * fee_of_day
 
-    def calculate_accommodation_fee(self, days_of_accommodation, fee_of_day):
-        pass
+    def calculate_AC_fee(list_of_detail_records):
+        return sum(i.fee for i in list_of_detail_records)
 
-    def calculate_AC_fee(self, list_of_detail_records):
-        pass
-
-    def create_accommodation_bill(self, room_id, date):
-        pass
+    def create_accommodation_bill(room_id, date):
+        room = Hotel.get_instance().rooms[room_id]
+        return Bill(
+            "accommodation",
+            Reception.calculate_accommodation_fee(
+                room.days,
+                room.fee_per_day,
+            ),
+            room_id,
+        )
 
     def create_AC_bill(self, room_id, date):
-        pass
+        order = self.orders[room_id]
+        return Bill(
+            "AC", Reception.calculate_AC_fee(order.detailed_records_AC), room_id
+        )
 
     def create_detailed_records_AC(self, room_id, date_in, date_out):
         pass
@@ -88,11 +112,17 @@ class Reception:
     ):
         pass
 
-    def set_room_state(self, room_id):
-        for i in self.rooms:
-            if i.id == room_id:
-                i.state = False
+    def set_room_state(room_id):
+        Hotel.get_instance().rooms[room_id].state = False
         # return something
+
+
+# 订单
+class Order:
+    def __init__(self, customer_id, room_id):
+        self.customer_id = customer_id
+        self.room_id = room_id
+        self.detailed_records_AC = []
 
 
 # 管理员
@@ -109,9 +139,12 @@ class Manager:
 
 # 账单
 class Bill:
-    def __init__(self, name, value):
-        self.name = name
-        self.value = value
+    def __init__(self, tag, fee, room_id):
+        # self.name = name
+        # self.value = value
+        self.tag = tag
+        self.fee = fee
+        self.room_id = room_id
 
 
 # 详单
@@ -119,19 +152,22 @@ class DetailRecord:
     def __init__(self, name, value):
         self.name = name
         self.value = value
+        self.fee
 
 
 # 客房
 class Room:
-    def __init__(self, id, time, temp, target_temp):
+    def __init__(self, id, temp, fee_per_day):
         self.id = id
-        self.time = time
+        self.days = 0
         self.temp = temp
-        self.target_temp = target_temp
+        self.target_temp
         self.speed = 1  # 默认中风速
         self.state = False  # 是否有顾客入住
         self.AC_status = False
         self.scheduler = Hotel.get_instance().scheduler
+        self.customer_id
+        self.fee_per_day = fee_per_day
 
     def power_on(self, current_room_temp):
         if self.AC_status == False:
