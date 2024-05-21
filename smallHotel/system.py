@@ -11,7 +11,13 @@ class Hotel:
             Hotel.manager = Manager("syb")
             Hotel.reception = Reception("syb")
             Hotel.scheduler = Scheduler()
-            Hotel.rooms = {0: Room(0), 1: Room(1), 2: Room(2), 3: Room(3), 4: Room(4)}
+            Hotel.rooms = {
+                1: Room(1, 32, 100),
+                2: Room(2, 28, 125),
+                3: Room(3, 30, 150),
+                4: Room(4, 29, 200),
+                5: Room(5, 35, 100),
+            }
         else:
             return
 
@@ -40,12 +46,6 @@ class Reception:
         self.customers = []
         self.orders = {}
 
-    # def check_in(self):
-    #     return
-
-    # def get_bill(self):
-    #     return
-
     def register_customer_info(self, customer_id, customer_name, number, date):
         self.customers.append(Customer(customer_id, customer_name, number))
         return True  # return isOK
@@ -54,7 +54,7 @@ class Reception:
         return {i.id: i.state for i in Hotel.get_instance().rooms.values()}
 
     def create_accommodation_order(self, customer_id, room_id):
-        self.orders.append(Order(customer_id, room_id))
+        self.orders[room_id] = Order(customer_id, room_id)
         room = Hotel.get_instance().rooms[room_id]
         room.state = True
         room.customer_id = customer_id
@@ -66,20 +66,26 @@ class Reception:
         pass
 
     def process_checkout(self, room_id):
-        days_of_accommodation, detailed_records_AC = Reception.query_fee_records(
-            room_id,
+        (
+            Hotel.get_instance().rooms[room_id].days,
+            detailed_records_AC,
+        ) = self.query_fee_records(
+            room_id,  # TODO: date_out
         )
         accommodation_bill = Reception.create_accommodation_bill(
-            room_id,
+            room_id, Hotel.get_instance().rooms[room_id].fee_per_day
         )
         AC_bill = Reception.create_AC_bill(
             room_id,
+            # TODO: date,
+            detailed_records_AC,
         )
         pass
         Reception.set_room_state(room_id)
 
-    def query_fee_records(room_id, date_out):
+    def query_fee_records(self, room_id, date_out):
         pass
+        # return (TODO: days_of_accommodation), self.orders[room_id].detailed_records_AC
 
     def calculate_accommodation_fee(days_of_accommodation, fee_of_day):
         return days_of_accommodation * fee_of_day
@@ -91,18 +97,15 @@ class Reception:
         room = Hotel.get_instance().rooms[room_id]
         return Bill(
             "accommodation",
+            room_id,
             Reception.calculate_accommodation_fee(
                 room.days,
                 room.fee_per_day,
             ),
-            room_id,
         )
 
-    def create_AC_bill(self, room_id, date):
-        order = self.orders[room_id]
-        return Bill(
-            "AC", Reception.calculate_AC_fee(order.detailed_records_AC), room_id
-        )
+    def create_AC_bill(room_id, date, detailed_records_AC):
+        return Bill("AC", room_id, Reception.calculate_AC_fee(detailed_records_AC))
 
     def create_detailed_records_AC(self, room_id, date_in, date_out):
         pass
@@ -139,20 +142,26 @@ class Manager:
 
 # 账单
 class Bill:
-    def __init__(self, tag, fee, room_id):
-        # self.name = name
-        # self.value = value
+    def __init__(self, tag, room_id, fee):
         self.tag = tag
-        self.fee = fee
         self.room_id = room_id
+        self.fee = fee
+        # TODO: 入住时间
+        # TODO: 离开时间
 
 
 # 详单
 class DetailRecord:
-    def __init__(self, name, value):
-        self.name = name
-        self.value = value
-        self.fee
+    def __init__(self, room_id, speed):
+        self.room_id = room_id
+        # TODO: 请求时间
+        # TODO: 服务开始时间
+        # TODO: 服务结束时间
+        # TODO: 服务时长
+        self.speed = speed
+        # TODO: 当前费用
+        # TODO: 费率
+        self.fee = None  # ?
 
 
 # 客房
@@ -161,18 +170,18 @@ class Room:
         self.id = id
         self.days = 0
         self.temp = temp
-        self.target_temp
+        self.target_temp = None
         self.speed = 1  # 默认中风速
         self.state = False  # 是否有顾客入住
         self.AC_status = False
         self.scheduler = Hotel.get_instance().scheduler
-        self.customer_id
+        self.customer_id = None
         self.fee_per_day = fee_per_day
 
     def power_on(self, current_room_temp):
         if self.AC_status == False:
             self.AC_status = self.scheduler.request(
-                self.id, self.id, self.target_temp, self.speed
+                self.id, self.target_temp, self.speed
             )
         pass
 
@@ -181,19 +190,19 @@ class Room:
 
     def change_temp(self, room_id, target_temp):
         self.target_temp = target_temp
-        self.scheduler.change_target_temp(room_id, target_temp)
+        self.scheduler.change_target_temp(self.id, target_temp)
         return True  # return isOK
         pass
 
     def change_speed(self, room_id, speed):
         self.speed = speed
-        self.scheduler.change_speed(room_id, speed)
+        self.scheduler.change_speed(self.id, speed)
         return True  # return isOK
         pass
 
     def power_off(self):
+        self.scheduler.clear(self.id)
         self.scheduler = None
-        self.scheduler.clear(id)
         pass
 
     def request_state(self, room_id):
@@ -221,6 +230,9 @@ class Scheduler:
                 return
         for i in self.serve_queue:
             if i.room_id == room_id:
+                Hotel.get_instance().reception.orders[
+                    i.room_id
+                ].detailed_records_AC.append(i.detail_record)
                 self.serve_queue.remove(i)
                 return
         pass
@@ -232,7 +244,7 @@ class Scheduler:
                 return
         for i in self.serve_queue:
             if i.room_id == room_id:
-                i.change_target_temp(room_id, target_temp)
+                i.change_target_temp(target_temp)
                 return
 
     def change_speed(self, room_id, speed):
@@ -242,7 +254,7 @@ class Scheduler:
                 return
         for i in self.serve_queue:
             if i.room_id == room_id:
-                i.change_speed(room_id, speed)
+                i.change_speed(speed)
                 return
 
     def schedule(self, room_id, target_temp, speed):
@@ -303,6 +315,7 @@ class ServeItem:
         self.target_temp = target_temp
         self.speed = speed
         self.service_time = 0
+        self.detail_record = DetailRecord(room_id, speed)
         pass
 
     def change_target_temp(self, target_temp):
@@ -310,6 +323,10 @@ class ServeItem:
 
     def change_speed(self, speed):
         self.speed = speed
+        Hotel.get_instance().reception.orders[self.room_id].detailed_records_AC.append(
+            self.detail_record
+        )
+        self.detail_record = DetailRecord(self.room_id, speed)
 
     def generate_detailed_record(self):
         pass
