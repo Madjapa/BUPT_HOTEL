@@ -54,6 +54,7 @@ class Reception:
         return {i.id: i.state for i in Hotel.get_instance().rooms.values()}
 
     def create_accommodation_order(self, customer_id, room_id):
+        # TODO: 处理对已有订单即已入住的房间进行的创建订单操作
         self.orders[room_id] = Order(customer_id, room_id)
         room = Hotel.get_instance().rooms[room_id]
         room.state = True
@@ -66,26 +67,18 @@ class Reception:
         pass
 
     def process_checkout(self, room_id):
-        (
-            Hotel.get_instance().rooms[room_id].days,
-            detailed_records_AC,
-        ) = self.query_fee_records(
-            room_id,  # TODO: date_out
-        )
-        accommodation_bill = Reception.create_accommodation_bill(
-            room_id, Hotel.get_instance().rooms[room_id].fee_per_day
-        )
+        # TODO: 处理对没有订单即没有入住的房间进行的结账操作
+        detailed_records_AC = self.query_fee_records(room_id)
+        accommodation_bill = Reception.create_accommodation_bill(room_id)
         AC_bill = Reception.create_AC_bill(
             room_id,
-            # TODO: date,
             detailed_records_AC,
         )
         pass
         Reception.set_room_state(room_id)
 
-    def query_fee_records(self, room_id, date_out):
-        pass
-        # return (TODO: days_of_accommodation), self.orders[room_id].detailed_records_AC
+    def query_fee_records(self, room_id):
+        return self.orders[room_id].detailed_records_AC
 
     def calculate_accommodation_fee(days_of_accommodation, fee_of_day):
         return days_of_accommodation * fee_of_day
@@ -93,7 +86,7 @@ class Reception:
     def calculate_AC_fee(list_of_detail_records):
         return sum(i.fee for i in list_of_detail_records)
 
-    def create_accommodation_bill(room_id, date):
+    def create_accommodation_bill(room_id):
         room = Hotel.get_instance().rooms[room_id]
         return Bill(
             "accommodation",
@@ -104,7 +97,7 @@ class Reception:
             ),
         )
 
-    def create_AC_bill(room_id, date, detailed_records_AC):
+    def create_AC_bill(room_id, detailed_records_AC):
         return Bill("AC", room_id, Reception.calculate_AC_fee(detailed_records_AC))
 
     def create_detailed_records_AC(self, room_id, date_in, date_out):
@@ -174,15 +167,18 @@ class Room:
         self.speed = 1  # 默认中风速
         self.state = False  # 是否有顾客入住
         self.AC_status = False
-        self.scheduler = Hotel.get_instance().scheduler
+        self.scheduler = None
         self.customer_id = None
         self.fee_per_day = fee_per_day
 
     def power_on(self, current_room_temp):
         if self.AC_status == False:
+            self.scheduler = Hotel.get_instance().scheduler
             self.AC_status = self.scheduler.request(
                 self.id, self.target_temp, self.speed
             )
+            if self.AC_status == True:
+                self.days += 1
         pass
 
     # def request_number(self, service_number):
@@ -203,6 +199,7 @@ class Room:
     def power_off(self):
         self.scheduler.clear(self.id)
         self.scheduler = None
+        self.AC_status = False
         pass
 
     def request_state(self, room_id):
