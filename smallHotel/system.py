@@ -1,3 +1,5 @@
+from smallHotel.models import *
+
 class Hotel:
     __instance = None
     manager = None
@@ -11,13 +13,9 @@ class Hotel:
             Hotel.manager = Manager("syb")
             Hotel.reception = Reception("syb")
             Hotel.scheduler = Scheduler()
-            Hotel.rooms = {
-                1: Room(1, 32, 100),
-                2: Room(2, 28, 125),
-                3: Room(3, 30, 150),
-                4: Room(4, 29, 200),
-                5: Room(5, 35, 100),
-            }
+            Hotel.rooms = {}
+            for i in RoomInfo.objects.all():
+                Hotel.rooms[i.id] = Room(i.id, i.temp, i.fee_per_day)
         else:
             return
 
@@ -179,6 +177,7 @@ class Room:
             )
             if self.AC_status == True:
                 self.days += 1
+            RoomInfo.objects.filter(room_id=self.id).update(AC_status=1)
         pass
 
     # def request_number(self, service_number):
@@ -200,6 +199,7 @@ class Room:
         self.scheduler.clear(self.id)
         self.scheduler = None
         self.AC_status = False
+        RoomInfo.objects.filter(room_id=self.id).update(AC_status=0)
         pass
 
     def request_state(self, room_id):

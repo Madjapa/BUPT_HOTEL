@@ -25,7 +25,7 @@ def manager(request):
     return render(request,"smallHotel/manager.html")
 
 def monitor(request):
-    return render(request,"smallHotel/monitor")
+    return render(request,"smallHotel/monitor.html")
 
 
 def powerOn(request):
