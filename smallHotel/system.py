@@ -2,7 +2,7 @@ class Hotel:
     __instance = None
     manager = None
     reception = None
-    schedule = None
+    scheduler = None
     rooms = None
 
     def __init__(self):
@@ -10,8 +10,14 @@ class Hotel:
             Hotel.__instance = self
             Hotel.manager = Manager("syb")
             Hotel.reception = Reception("syb")
-            Hotel.schedule = Schedule()
-            Hotel.rooms = [Room(0), Room(1), Room(2), Room(3), Room(4)]
+            Hotel.scheduler = Scheduler()
+            Hotel.rooms = {
+                1: Room(1, 32, 100),
+                2: Room(2, 28, 125),
+                3: Room(3, 30, 150),
+                4: Room(4, 29, 200),
+                5: Room(5, 35, 100),
+            }
         else:
             return
 
@@ -22,12 +28,12 @@ class Hotel:
         return Hotel.__instance
 
 
-# 顾客类
+# 顾客
 class Customer:
-    def __init__(self, name, num, id):
-        self.name = name
-        self.num = num  # 房间号?
+    def __init__(self, id, name, num):
         self.id = id
+        self.name = name
+        self.num = num  # ?
 
     # def use(self):
     #     return
@@ -38,23 +44,21 @@ class Reception:
     def __init__(self, name):
         self.name = name
         self.customers = []
-        self.rooms = Hotel.get_instance().rooms
-
-    # def check_in(self):
-    #     return
-
-    # def get_bill(self):
-    #     return
+        self.orders = {}
 
     def register_customer_info(self, customer_id, customer_name, number, date):
-        self.customers.append(Customer(customer_name, number, customer_id))
+        self.customers.append(Customer(customer_id, customer_name, number))
         return True  # return isOK
 
     def check_room_state(self, date):
-        return [[i.id, i.state] for i in self.rooms]
+        return {i.id: i.state for i in Hotel.get_instance().rooms.values()}
 
-    def create_accommodation_order(self, customer_id, room__id):
-        pass
+    def create_accommodation_order(self, customer_id, room_id):
+        # TODO: 处理对已有订单即已入住的房间进行的创建订单操作
+        self.orders[room_id] = Order(customer_id, room_id)
+        room = Hotel.get_instance().rooms[room_id]
+        room.state = True
+        room.customer_id = customer_id
 
     def deposite(self, amount):
         pass
@@ -63,22 +67,38 @@ class Reception:
         pass
 
     def process_checkout(self, room_id):
+        # TODO: 处理对没有订单即没有入住的房间进行的结账操作
+        detailed_records_AC = self.query_fee_records(room_id)
+        accommodation_bill = Reception.create_accommodation_bill(room_id)
+        AC_bill = Reception.create_AC_bill(
+            room_id,
+            detailed_records_AC,
+        )
         pass
+        Reception.set_room_state(room_id)
 
-    def query_fee_records(self, room_id, date_out):
-        pass
+    def query_fee_records(self, room_id):
+        return self.orders[room_id].detailed_records_AC
 
-    def calculate_accommodation_fee(self, days_of_accommodation, fee_of_day):
-        pass
+    def calculate_accommodation_fee(days_of_accommodation, fee_of_day):
+        return days_of_accommodation * fee_of_day
 
-    def calculate_AC_fee(self, list_of_detail_records):
-        pass
+    def calculate_AC_fee(list_of_detail_records):
+        return sum(i.fee for i in list_of_detail_records)
 
-    def create_accommodation_bill(self, room_id, date):
-        pass
+    def create_accommodation_bill(room_id):
+        room = Hotel.get_instance().rooms[room_id]
+        return Bill(
+            "accommodation",
+            room_id,
+            Reception.calculate_accommodation_fee(
+                room.days,
+                room.fee_per_day,
+            ),
+        )
 
-    def create_AC_bill(self, room_id, date):
-        pass
+    def create_AC_bill(room_id, detailed_records_AC):
+        return Bill("AC", room_id, Reception.calculate_AC_fee(detailed_records_AC))
 
     def create_detailed_records_AC(self, room_id, date_in, date_out):
         pass
@@ -88,11 +108,17 @@ class Reception:
     ):
         pass
 
-    def set_room_state(self, room_id):
-        for i in self.rooms:
-            if i.id == room_id:
-                i.state = False
+    def set_room_state(room_id):
+        Hotel.get_instance().rooms[room_id].state = False
         # return something
+
+
+# 订单
+class Order:
+    def __init__(self, customer_id, room_id):
+        self.customer_id = customer_id
+        self.room_id = room_id
+        self.detailed_records_AC = []
 
 
 # 管理员
@@ -109,59 +135,71 @@ class Manager:
 
 # 账单
 class Bill:
-    def __init__(self, name, value):
-        self.name = name
-        self.value = value
+    def __init__(self, tag, room_id, fee):
+        self.tag = tag
+        self.room_id = room_id
+        self.fee = fee
+        # TODO: 入住时间
+        # TODO: 离开时间
 
 
 # 详单
 class DetailRecord:
-    def __init__(self, name, value):
-        self.name = name
-        self.value = value
+    def __init__(self, room_id, speed):
+        self.room_id = room_id
+        # TODO: 请求时间
+        # TODO: 服务开始时间
+        # TODO: 服务结束时间
+        # TODO: 服务时长
+        self.speed = speed
+        # TODO: 当前费用
+        # TODO: 费率
+        self.fee = None  # ?
 
 
 # 客房
 class Room:
-    # def __init__(self, id, time, temp, target_temp):
-    #     self.id = id
-    #     self.time = time
-    #     self.temp = temp
-    #     self.target_temp = target_temp
-    #     self.speed = 1  # 默认中风速
-    #     self.state = False  # 是否有顾客入住
-    #     self.AC_status = False
-    #     self.schedule = Hotel.get_instance().schedule
-
-    def __init__(self, id):
+    def __init__(self, id, temp, fee_per_day):
         self.id = id
-        self.speed = 0
-        self.time = 0
-        self.temp = 0
-        self.target_temp = 0
-        self.state = 0
-        self.schedule = Hotel.get_instance().schedule
+        self.days = 0
+        self.temp = temp
+        self.target_temp = None
+        self.speed = 1  # 默认中风速
+        self.state = False  # 是否有顾客入住
+        self.AC_status = False
+        self.scheduler = None
+        self.customer_id = None
+        self.fee_per_day = fee_per_day
 
     def power_on(self, current_room_temp):
-        self.schedule.request(self.id)
+        if self.AC_status == False:
+            self.scheduler = Hotel.get_instance().scheduler
+            self.AC_status = self.scheduler.request(
+                self.id, self.target_temp, self.speed
+            )
+            if self.AC_status == True:
+                self.days += 1
         pass
 
     # def request_number(self, service_number):
     #     pass
 
     def change_temp(self, room_id, target_temp):
-        self.schedule.change_target_temp(room_id, target_temp)
+        self.target_temp = target_temp
+        self.scheduler.change_target_temp(self.id, target_temp)
         return True  # return isOK
         pass
 
     def change_speed(self, room_id, speed):
-        self.schedule.change_speed(room_id, speed)
+        self.speed = speed
+        self.scheduler.change_speed(self.id, speed)
         return True  # return isOK
         pass
 
     def power_off(self):
-        self.schedule = None
-        self.schedule.clear(id)
+        self.scheduler.clear(self.id)
+        self.scheduler = None
+        self.AC_status = False
         pass
 
     def request_state(self, room_id):
@@ -169,20 +207,18 @@ class Room:
 
 
 # 调度
-class Schedule:
+class Scheduler:
     def __init__(self):
         self.wait_queue = []
         self.serve_queue = []
 
-    def request(self, room_id, target_temp = 30):
+    def request(self, room_id, target_temp, speed):
         if len(self.serve_queue) < 3:
-            serve_item = ServeItem(room_id, target_temp)
+            serve_item = ServeItem(room_id, target_temp, speed)
             self.serve_queue.append(serve_item)
+            return True
         else:
-            wait_item = WaitItem(room_id, target_temp)
-            self.wait_queue.append(wait_item)
-        print(self.serve_queue)
-        pass
+            return self.schedule(room_id, target_temp, speed)
 
     def clear(self, room_id):
         for i in self.wait_queue:
@@ -191,6 +227,9 @@ class Schedule:
                 return
         for i in self.serve_queue:
             if i.room_id == room_id:
+                Hotel.get_instance().reception.orders[
+                    i.room_id
+                ].detailed_records_AC.append(i.detail_record)
                 self.serve_queue.remove(i)
                 return
         pass
@@ -202,7 +241,7 @@ class Schedule:
                 return
         for i in self.serve_queue:
             if i.room_id == room_id:
-                i.change_target_temp(room_id, target_temp)
+                i.change_target_temp(target_temp)
                 return
 
     def change_speed(self, room_id, speed):
@@ -212,24 +251,68 @@ class Schedule:
                 return
         for i in self.serve_queue:
             if i.room_id == room_id:
-                i.change_speed(room_id, speed)
+                i.change_speed(speed)
+                return
+
+    def schedule(self, room_id, target_temp, speed):
+        if len([i for i in self.serve_queue if i.speed < speed]) != 0:  # 优先级调度
+            replace_room_ids = [
+                i.room_id
+                for i in self.serve_queue
+                if i.speed
+                == (
+                    min(
+                        [i for i in self.serve_queue if i.speed < speed],
+                        key=lambda serve_item: serve_item.speed,
+                    ).speed
+                )
+            ]
+            if len(replace_room_ids) == 1:
+                replace_room_id = replace_room_ids[0]
+            else:
+                replace_room_id = max(
+                    [i for i in self.serve_queue if i.room_id in replace_room_ids],
+                    key=lambda serve_item: serve_item.service_time,
+                ).room_id
+            self.cast_serve_to_wait(replace_room_id)
+            serve_item = ServeItem(room_id, target_temp, speed)
+            self.serve_queue.append(serve_item)
+            return True
+        elif len([i for i in self.serve_queue if i.speed == speed]) != 0:  # 时间片调度
+            pass
+        else:  # 等待
+            wait_item = WaitItem(room_id, target_temp, speed)
+            self.wait_queue.append(wait_item)
+            return False
+        pass
+
+    def cast_serve_to_wait(self, room_id):
+        for i in self.serve_queue:
+            if i.room_id == room_id:
+                self.serve_queue.remove(i)
+                wait_item = WaitItem(i.room_id, i.target_temp, i.speed)
+                self.wait_queue.append(wait_item)
                 return
 
 
 # 等待对象?
 class WaitItem:
-    def __init__(self, room_id, target_temp, speed):
+    def __init__(self, room_id, target_temp, speed, wait_time=2):
         self.room_id = room_id
         self.target_temp = target_temp
         self.speed = speed
+        self.wait_time = wait_time
         pass
 
 
 # 服务对象
 class ServeItem:
-    def __init__(self, room_id, target_temp):
+    def __init__(self, room_id, target_temp, speed):
         self.room_id = room_id
         self.target_temp = target_temp
+        self.speed = speed
+        self.service_time = 0
+        self.detail_record = DetailRecord(room_id, speed)
         pass
 
     def change_target_temp(self, target_temp):
@@ -237,3 +320,10 @@ class ServeItem:
 
     def change_speed(self, speed):
         self.speed = speed
+        Hotel.get_instance().reception.orders[self.room_id].detailed_records_AC.append(
+            self.detail_record
+        )
+        self.detail_record = DetailRecord(self.room_id, speed)
+
+    def generate_detailed_record(self):
+        pass
