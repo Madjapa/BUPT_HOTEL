@@ -5,9 +5,9 @@ const axiosInstance = axios.create({
         'Content-Type': 'application/json' // 设置请求头
     }
 });
-
+/*
 function RequestTargetTemp(Roomid){
-    axios.get('targetTemp',{params:{roomid: Roomid}})
+    axiosInstance.post('targetTemp/',{roomid: Roomid})
     .then(function(response){
             document.getElementsByClassName(Roomid)[0].getElementsByClassName('targetTemp')[0].textContent = String(response.data.targetTemp);
     })
