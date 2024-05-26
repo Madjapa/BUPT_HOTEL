@@ -32,23 +32,23 @@ function requestRoomtemp(roomid){
         }); 
     });
 }*/
-function RequestTargetTemp(roomid){
-    console.log({'roomid': roomid});
-    axios.get('targetTemp/',{'roomid': roomid})
+
+function RequestTargetTemp(Roomid){
+    axios.get('targetTemp',{params:{roomid: Roomid}})
     .then(function(response){
-            document.getElementsByClassName(roomid)[0].getElementsByClassName('targetTemp')[0].textContent = String(response.data.targetTemp);
+            document.getElementsByClassName(Roomid)[0].getElementsByClassName('targetTemp')[0].textContent = String(response.data.targetTemp);
     })
     .catch(error =>{
-        console.log("getTargetTemp error at room: " + String(roomid));
+        console.log("getTargetTemp error at room: " + String(Roomid));
     });
 }
-function requestRoomtemp(roomid){
-    axios.get('roomTemp/',{'roomid': roomid})
+function requestRoomtemp(Roomid){
+    axios.get('roomTemp',{params:{roomid: Roomid}})
     .then(function(response){
-            document.getElementsByClassName(roomid)[0].getElementsByClassName('roomTemp')[0].textContent = String(response.data.roomTemp);
+            document.getElementsByClassName(Roomid)[0].getElementsByClassName('roomTemp')[0].textContent = String(response.data.roomTemp);
     })
     .catch(error =>{
-        console.log("getRoomTemp error at room: " + String(roomid));
+        console.log("getRoomTemp error at room: " + String(Roomid));
     }); 
 }
 /*动画效果*/
