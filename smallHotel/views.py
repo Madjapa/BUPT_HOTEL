@@ -60,3 +60,23 @@ def flowSubmit(request):
     print("roomid " + str(roomid) + " temp " + str(roomtemp) )
     response = {'code': 1}
     return JsonResponse(response)
+
+def getTargetTemp(request):
+    if request.method == 'GET':
+        roomid = request.GET.get('roomid',"")
+    temp = Hotel.get_instance().rooms[int(roomid)].target_temp
+    response = {
+        "targetTemp": temp
+    }
+    return JsonResponse(response)
+
+def getRoomTemp(request):
+    if request.method == 'GET':
+        roomid = request.GET.get('roomid',"")
+        print(request.POST)
+
+    temp = Hotel.get_instance().rooms[int(roomid)].temp
+    response = {
+        "roomTemp": temp
+    }
+    return JsonResponse(response)
