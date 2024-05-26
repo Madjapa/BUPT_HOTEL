@@ -94,7 +94,7 @@ function requestExp(){
         }
     })
     .catch(error =>{
-        console.log("error");
+        console.log("getExp error");
     });
 }
 function requestRoomtemp(){
@@ -105,7 +105,7 @@ function requestRoomtemp(){
         }
     })
     .catch(error =>{
-        console.log("error");
+        console.log("getRoomTemp error");
     });
 }
 function ACSwitch(){//空调开关机（以关机->开机为例）
@@ -127,7 +127,7 @@ function ACSwitch(){//空调开关机（以关机->开机为例）
         .catch(error =>{
             console.log("error");
         });
-    }else{
+    }else{//关机后停止请求累计费用及房间温度
         clearInterval(getExp);
         clearInterval(getRoomtemp);
         status.setAttribute('value','0');

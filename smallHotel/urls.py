@@ -14,6 +14,7 @@ name    ：https://docs.djangoproject.com/zh-hans/4.2/topics/http/urls/#naming-u
 请为每个视图函数添加一个或多个匹配规则以适应需求,不需要/作为前缀
 '''
 urlpatterns = [
+    path("test/",testAC.test,name="test"),
     path("home/", views.admin, name="homepage"),
     path("rec/",views.reception,name="recept"),
     path("cus/",views.customer,name="customer"),

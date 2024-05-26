@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'smallHotel/boostrap/css/bootstrap.min.css' %}"> 
+    <script src="{% static 'smallHotel/boostrap/js/bootstrap.bundle.min.js' %}"></script>
+    <title>空调管理员监控系统</title>
+</head>
+<body>
+    <div class="container-fluid border border-secondary mx-1 my-1" style="max-width: 350px;">
+        <div class="row my-2">
+            <div class="col lead text-start text-primary"><span class="lead">风速</span></div>
+            <div class="col text-center" id="slowSpeed"><span>低速</span></div>
+            <div class="col text-center" id="midSpeed"><span>中速</span></div>
+            <div class="col text-center" id="highSpeed"><span>高速</span></div>
+        </div>
+        <hr class="border border-secondary"></hr>
+        <div class="row ">
+            <div class="row my-2">
+                <div class="col lead text-start text-primary"><span class="lead">模式</span></div>
+                <div class="col text-center" id="cool"><span>冷</span></div>
+                <div class="col text-center" id="hot"><span>热</span></div>
+            </div>
+            <div class="row my-2">
+                <div class="col">
+                    <div class="row lead text-start text-primary"><span>当前温度</span></div>
+                    <div class="row text-center">
+                        <div class="col text-center"><span id="roomTemp">-</span><span>℃</span></div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="row lead text-start text-primary"><span>目标温度</span></div>
+                    <div class="row text-center" >
+                        <div class="row text-center">
+                            <div class="col text-center"><span id="roomTemp">-</span><span>℃</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr class="border border-secondary"></hr>
+        <div class="row text-center" id="button">
+            <div class="col"></div>
+            <div class="col"><button></button></div>
+            <div class="col"></div>
+        </div>
+        <hr class="border border-secondary"></hr>
+        <div class="row text-center">
+            <div class="col" id="room">xxx号客房</div>
+        </div>
+</body>
+</html>
