@@ -35,9 +35,7 @@ function requestRoomtemp(roomid){
 function RequestTargetTemp(roomid){
     axios.get('targetTemp/',{roomid: roomid})
     .then(function(response){
-        if(response.data.code == 1){
-            document.getElementsByClassName(roomid)[0].getElementsByClassName('targetTemp')[0].textContent = String(response.data.Targettemp);
-        }
+            document.getElementsByClassName(roomid)[0].getElementsByClassName('targetTemp')[0].textContent = String(response.data.targetTemp);
     })
     .catch(error =>{
         console.log("getTargetTemp error at room: " + String(roomid));
@@ -46,9 +44,7 @@ function RequestTargetTemp(roomid){
 function requestRoomtemp(roomid){
     axios.get('roomTemp/',{roomid: roomid})
     .then(function(response){
-        if(response.data.code == 1){
-            document.getElementsByClassName(roomid).getElementsByClassName('roomTemp')[0].textContent = String(response.data.roomtemp);
-        }
+            document.getElementsByClassName(roomid).getElementsByClassName('roomTemp')[0].textContent = String(response.data.roomTemp);
     })
     .catch(error =>{
         console.log("getRoomTemp error at room: " + String(roomid));

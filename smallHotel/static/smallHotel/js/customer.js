@@ -89,9 +89,7 @@ function windspeedAdjust(){//风速调节
 function requestExp(){
     axios.get('getExpenses/',{roomid: roomid})
     .then(function(response){
-        if(response.data.code == 1){
             document.getElementById('expenses').textContent = String(response.data.expenses);
-        }
     })
     .catch(error =>{
         console.log("getExp error");
@@ -100,9 +98,7 @@ function requestExp(){
 function requestRoomtemp(){
     axios.get('roomTemp/',{roomid: roomid})
     .then(function(response){
-        if(response.data.code == 1){
-            document.getElementById('roomtemp').textContent = String(response.data.roomtemp);
-        }
+            document.getElementById('roomtemp').textContent = String(response.data.roomTemp);
     })
     .catch(error =>{
         console.log("getRoomTemp error");
