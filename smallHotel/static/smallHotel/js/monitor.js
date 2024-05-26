@@ -33,7 +33,8 @@ function requestRoomtemp(roomid){
     });
 }*/
 function RequestTargetTemp(roomid){
-    axios.get('targetTemp/',{roomid: roomid})
+    console.log({'roomid': roomid});
+    axios.get('targetTemp/',{'roomid': roomid})
     .then(function(response){
             document.getElementsByClassName(roomid)[0].getElementsByClassName('targetTemp')[0].textContent = String(response.data.targetTemp);
     })
@@ -42,9 +43,9 @@ function RequestTargetTemp(roomid){
     });
 }
 function requestRoomtemp(roomid){
-    axios.get('roomTemp/',{roomid: roomid})
+    axios.get('roomTemp/',{'roomid': roomid})
     .then(function(response){
-            document.getElementsByClassName(roomid).getElementsByClassName('roomTemp')[0].textContent = String(response.data.roomTemp);
+            document.getElementsByClassName(roomid)[0].getElementsByClassName('roomTemp')[0].textContent = String(response.data.roomTemp);
     })
     .catch(error =>{
         console.log("getRoomTemp error at room: " + String(roomid));
@@ -64,6 +65,7 @@ function mouseleave(){
 var rownum = 1;
 var colnum = 3;
 var update;
+var roomid = 1;
 function init(){
     let template = document.getElementById("pannel");
     for (let r = 0; r < rownum; r++){
@@ -90,6 +92,7 @@ function updateData(){
             RequestTargetTemp(c + 1);
         }       
     }
+
     setInterval(update,2000);
 }
 /*

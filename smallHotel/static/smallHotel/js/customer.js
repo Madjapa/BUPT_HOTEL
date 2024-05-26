@@ -66,7 +66,7 @@ function tempSub(){//空调降温
 }
 function tempSubmit(){
     //提交温度给后端（提交当前显示在温度调节器的目标温度即可）
-    axios.post('temperature/',{roomid: roomid,temp: targetTemp})
+    axios.post('temperature/',{'roomid': roomid,'temp': targetTemp})
     .then(response =>{
         console.log(response.data);
     })
