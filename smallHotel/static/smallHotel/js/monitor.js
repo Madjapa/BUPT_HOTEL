@@ -7,7 +7,7 @@ const axiosInstance = axios.create({
 });
 /*
 function RequestTargetTemp(Roomid){
-    axiosInstance.post('targetTemp',{roomid: Roomid})
+    axiosInstance.post('targetTemp/',{roomid: Roomid})
     .then(function(response){
             document.getElementsByClassName(Roomid)[0].getElementsByClassName('targetTemp')[0].textContent = String(response.data.targetTemp);
     })
