@@ -15,6 +15,14 @@ def getroomtemp(request):
     #data = json.loads(request.body.decode('utf-8'))
         response = {'code' : 1,'roomtemp': '27'}
         return JsonResponse(response)
+def targetTemp(request):
+    if request.method == 'GET':
+        response = {'targetTemp': '27'}
+        return JsonResponse(response)
+def roomTemp(request):
+    if request.method == 'GET':
+        response = {'roomTemp': '27'}
+        return JsonResponse(response)
 def test(request):
     if request.method == 'POST':
         data = json.loads(request.body.decode('utf-8'))
