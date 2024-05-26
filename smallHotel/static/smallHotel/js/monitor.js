@@ -15,7 +15,7 @@ function RequestTargetTemp(Roomid){
         console.log("getTargetTemp error at room: " + String(Roomid));
     });
 }
-
+*/
 function RequestTargetTemp(Roomid){
     axiosInstance.get('targetTemp/',{params:{roomid: Roomid}})
     .then(function(response){
