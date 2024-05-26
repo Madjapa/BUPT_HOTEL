@@ -14,7 +14,7 @@ function RequestTargetTemp(Roomid){
     .catch(error =>{
         console.log("getTargetTemp error at room: " + String(Roomid));
     });
-}*/
+}
 
 function RequestTargetTemp(Roomid){
     axiosInstance.get('targetTemp/',{params:{roomid: Roomid}})
