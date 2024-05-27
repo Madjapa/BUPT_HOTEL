@@ -28,6 +28,7 @@ urlpatterns = [
     path("cus/boot/",testAC.boot,name="boot"),
     path("cus/getExpenses/",testAC.getExp,name="xx"),
     path("cus/roomTemp/",testAC.getroomtemp,name='yy'),
+    path("cus/shutdown/",testAC.test,name='yy'),
     path("mon/targetTemp/",views.getTargetTemp,name='yyy'),
     path("mon/roomTemp/",views.getRoomTemp,name='yyyy'),
 ]

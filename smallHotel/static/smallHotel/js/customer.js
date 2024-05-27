@@ -7,9 +7,9 @@ const axiosInstance = axios.create({
 function btnFuncAdd(){//给button添加点击事件
     document.getElementById('target_temp_sub_button').setAttribute("onclick","tempSub()");
     document.getElementById('target_temp_add_button').setAttribute("onclick","tempAdd()");
-    document.getElementById('low_speed_button').setAttribute("onclick","windspeedAdjust()");
-    document.getElementById('middle_speed_button').setAttribute("onclick","windspeedAdjust()");
-    document.getElementById('high_speed_button').setAttribute("onclick","windspeedAdjust()");
+    document.getElementById('low_speed_button').setAttribute("onclick","windspeedAdjust.call(this)");
+    document.getElementById('middle_speed_button').setAttribute("onclick","windspeedAdjust.call(this)");
+    document.getElementById('high_speed_button').setAttribute("onclick","windspeedAdjust.call(this)");
     document.getElementById('cool_button').setAttribute("onclick","coolButton()");
     document.getElementById('heat_button').setAttribute("onclick","heatButton()");
 }
@@ -51,7 +51,7 @@ function tempAdd(){//空调升温
     //目标温度+1
     document.getElementById('targetTemp').textContent = String(targetTemp);
     //显示在温度调节器上
-    tempTimer = setTimeout(tempSubmit,2000);
+    tempTimer = setTimeout(tempSubmit,500);
     //计时，计时结束前若时钟没有被停止则执行tempSubmit()
 }
 function tempSub(){//空调降温
@@ -61,7 +61,7 @@ function tempSub(){//空调降温
     //目标温度-1
     document.getElementById('targetTemp').textContent = String(targetTemp);
     //显示在温度调节器上
-    tempTimer = setTimeout(tempSubmit,2000);
+    tempTimer = setTimeout(tempSubmit,500);
     //计时，计时结束前若时钟没有被停止则执行tempSubmit()
 }
 function tempSubmit(){
@@ -82,10 +82,30 @@ function coolButton(){//制冷
 function heatButton(){//制热
     //制热按钮颜色由灰色到红色
 }
+function clearWindCssEcp(windspeed){
+
+}
+/*
 function windspeedAdjust(){//风速调节
     //被选中风速条从低到该风速条显示颜色，其余为灰色
     //显示当前风速
-}
+    if(this.id == 'low_speed_button'){
+        var windspeed = 0;
+    }else if(this.id == 'middle_speed_button'){
+        var windspeed = 1;
+    }else{
+        var windspeed = 2;
+    }
+    axiosInstance.get('windSpeed/',{params: {roomid: roomid,windspeed: windspeed}})
+    .then(function(response){
+        if(response.data.code == 1){
+            //待补充
+        }
+    })
+    .catch(error =>{
+        console.log("getExp error");
+    });
+}*/
 function requestExp(){
     axiosInstance.get('getExpenses/',{params: {roomid: roomid}})
     .then(function(response){

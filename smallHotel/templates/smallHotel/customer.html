@@ -6,8 +6,11 @@
     <title>顾客界面</title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'smallHotel/css/custStyle.css' %}">
+    <link rel="stylesheet" href="{% static 'smallHotel/boostrap/css/bootstrap.min.css' %}"> 
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
     <script src="{% static 'smallHotel/js/axios.js' %}"></script>
     <script type="text/javascript" src="{% static 'smallHotel/js/customer.js' %}"></script>
+
 </head>
 
 <body onselectstart="return false">
@@ -36,7 +39,7 @@
                 当前风速
                 <button type="button" id="low_speed_button" ><span>低风速</span></button>
                 <button type="button" id="middle_speed_button" ><span>中风速</span></button>
-                <button type="button" id="high_speed_button" ><span>高风速</span></button>
+                <button type="button" id="high_speed_button"><span>高风速</span></button>
             </div>
             <div>
             <div id="mode_panel">
