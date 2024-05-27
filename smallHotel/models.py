@@ -10,14 +10,14 @@ class CustomerInfo(models.Model):
 class RoomInfo(models.Model):
     objects = models.Manager()
     room_id = models.IntegerField()
-    days = models.IntegerField()
-    temp = models.IntegerField()
-    target_temp = models.IntegerField()
-    speed = models.IntegerField()
-    state = models.BooleanField()
-    AC_status = models.BooleanField()
+    days = models.IntegerField(default=0)
+    temp = models.FloatField()
+    target_temp = models.FloatField(default=25)
+    speed = models.IntegerField(default=1)
+    state = models.BooleanField(default=False)
+    AC_status = models.BooleanField(default=False)
     customer_id = models.IntegerField()
-    fee_per_day = models.IntegerField()
+    fee_per_day = models.FloatField()
 
 
 class BillInfo(models.Model):
