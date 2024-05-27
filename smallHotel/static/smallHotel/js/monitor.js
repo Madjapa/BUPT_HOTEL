@@ -14,8 +14,8 @@ function RequestTargetTemp(Roomid){
     .catch(error =>{
         console.log("getTargetTemp error at room: " + String(Roomid));
     });
-}*/
-
+}
+*/
 function RequestTargetTemp(Roomid){
     axiosInstance.get('targetTemp/',{params:{roomid: Roomid}})
     .then(function(response){
@@ -95,7 +95,7 @@ function init(){
     }
     updateData();
 }
-
+/*
 function clear(){
     for (let r = 0; r < rownum; r++){
         for(let c = 0;c < colnum;c++){
@@ -107,10 +107,17 @@ function clear(){
             }     
         }       
     }
+}*/
+function clear(Roomid){
+    document.getElementsByClassName(Roomid)[0].getElementsByClassName('targetTemp')[0].textContent = '-';
+    document.getElementsByClassName(Roomid)[0].getElementsByClassName('roomTemp')[0].textContent = '-';
+    document.getElementsByClassName(Roomid)[0].getElementsByClassName('boot')[0].classList.remove("text-danger");
+    for(let d = 0;d < 3;d++){
+        document.getElementsByClassName(Roomid)[0].getElementsByClassName('Speed')[d].classList.remove("mark");
+    }         
 }
 async function updateData(){
     clearInterval(update);
-    clear();
     for (let r = 0; r < rownum; r++){
         for(let c = 0;c < colnum;c++){
             var status = await RequestStatus(r * 3 + c + 1);  
@@ -118,6 +125,8 @@ async function updateData(){
                 RequestRoomtemp(r * 3 + c + 1);
                 RequestTargetTemp(r * 3 + c + 1);
                 RequestSpeed(r * 3 + c + 1);
+            }else{
+                clear(r * 3 + c + 1);
             }
         }       
     }
