@@ -7,6 +7,7 @@ class Hotel:
     reception = None
     scheduler = None
     rooms = None
+    current_time = None
 
     def __init__(self):
         if Hotel.__instance is None:
@@ -17,6 +18,7 @@ class Hotel:
             Hotel.rooms = {}
             for i in RoomInfo.objects.all():
                 Hotel.rooms[i.id] = Room(i.id, i.temp, i.fee_per_day)
+            Hotel.current_time = 0
         else:
             return
 
@@ -25,6 +27,14 @@ class Hotel:
         if not Hotel.__instance:
             Hotel()
         return Hotel.__instance
+
+    def time_forward(self):
+        Hotel.get_instance().current_time += 1  # 前进1分钟
+        for i in Hotel.get_instance().rooms.values():
+            if i.AC_status == False and i.temp < i.init_temp:
+                i.temp += 0.5  # 回温每分钟0.5℃
+        Hotel.get_instance().scheduler.check()
+        pass
 
 
 # 顾客
@@ -163,16 +173,26 @@ class Bill:
 
 # 详单
 class DetailRecord:
-    def __init__(self, room_id, speed):
+    def __init__(self, room_id, speed, start_time, request_time):
         self.room_id = room_id
-        # TODO: 请求时间
-        # TODO: 服务开始时间
-        # TODO: 服务结束时间
-        # TODO: 服务时长
+        self.request_time = request_time
+        self.service_start_time = start_time
+        self.service_end_time = None
+        self.service_time = None
         self.speed = speed
         # TODO: 当前费用
         # TODO: 费率
         self.fee = None  # ?
+
+    def store(self):
+        DetailRecordInfo(
+            room_id=self.room_id,
+            speed=self.speed,
+            service_start_time=self.service_start_time,
+            service_end_time=self.service_end_time,
+            service_time=self.service_time,
+        ).save()
+        pass
 
 
 # 客房
@@ -185,19 +205,22 @@ class Room:
         self.speed = 1  # 默认中风速
         self.state = False  # 是否有顾客入住
         self.AC_status = False
+        self.AC_running = False
         self.scheduler = None
         self.customer_id = None
         self.fee_per_day = fee_per_day
+        self.init_temp = temp
 
     def power_on(self, current_room_temp):
         if self.AC_status == False:
+            self.AC_status = True
             self.scheduler = Hotel.get_instance().scheduler
-            self.AC_status = self.scheduler.request(
+            self.AC_running = self.scheduler.request(
                 self.id, self.target_temp, self.speed
             )
-            if self.AC_status == True:
-                self.days += 1
+            self.days += 1
             RoomInfo.objects.filter(room_id=self.id).update(AC_status=1)
+            RoomInfo.objects.filter(room_id=self.id).update(AC_running=self.AC_running)
         pass
 
     # def request_number(self, service_number):
@@ -221,7 +244,9 @@ class Room:
         self.scheduler.clear(self.id)
         self.scheduler = None
         self.AC_status = False
+        self.AC_running = False
         RoomInfo.objects.filter(room_id=self.id).update(AC_status=0)
+        RoomInfo.objects.filter(room_id=self.id).update(AC_running=0)
         pass
 
     # def request_state(self, room_id):
@@ -236,7 +261,9 @@ class Scheduler:
 
     def request(self, room_id, target_temp, speed):
         if len(self.serve_queue) < 3:
-            serve_item = ServeItem(room_id, target_temp, speed)
+            serve_item = ServeItem(
+                room_id, target_temp, speed, Hotel.get_instance().current_time
+            )
             self.serve_queue.append(serve_item)
             return True
         else:
@@ -249,9 +276,15 @@ class Scheduler:
                 return
         for i in self.serve_queue:
             if i.room_id == room_id:
+                i.detail_record.service_end_time = Hotel.get_instance().current_time
+                i.detail_record.service_time = (
+                    i.detail_record.service_end_time
+                    - i.detail_record.service_start_time
+                )
                 Hotel.get_instance().reception.orders[i.room_id][
                     -1
                 ].detailed_records_AC.append(i.detail_record)
+                i.detail_record.store()
                 self.serve_queue.remove(i)
                 return
         pass
@@ -294,48 +327,133 @@ class Scheduler:
             else:
                 replace_room_id = max(
                     [i for i in self.serve_queue if i.room_id in replace_room_ids],
-                    key=lambda serve_item: serve_item.service_time,
+                    key=lambda serve_item: (
+                        Hotel.get_instance().current_time - serve_item.serve_start_time
+                    ),
                 ).room_id
             self.cast_serve_to_wait(replace_room_id)
-            serve_item = ServeItem(room_id, target_temp, speed)
-            self.serve_queue.append(serve_item)
+            self.serve_queue.append(
+                ServeItem(
+                    room_id, target_temp, speed, Hotel.get_instance().current_time
+                )
+            )
             return True
         elif len([i for i in self.serve_queue if i.speed == speed]) != 0:  # 时间片调度
-            pass
+            self.wait_queue.append(
+                WaitItem(room_id, target_temp, speed, Hotel.get_instance().current_time)
+            )
+            return False
         else:  # 等待
-            wait_item = WaitItem(room_id, target_temp, speed)
+            wait_item = WaitItem(
+                room_id, target_temp, speed, Hotel.get_instance().current_time
+            )
             self.wait_queue.append(wait_item)
             return False
         pass
 
-    def cast_serve_to_wait(self, room_id):
+    def cast_serve_to_wait(self, room_id=None):
+        if room_id is not None:
+            for i in self.serve_queue:
+                if i.room_id == room_id:
+                    cast_to_wait_serve_item = i
+                    break
+        else:
+            cast_to_wait_serve_item = max(
+                self.serve_queue, key=lambda serve_item: serve_item.serve_start_time
+            )
+        self.serve_queue.remove(cast_to_wait_serve_item)
+        self.wait_queue.append(
+            WaitItem(
+                cast_to_wait_serve_item.room_id,
+                cast_to_wait_serve_item.target_temp,
+                cast_to_wait_serve_item.speed,
+                cast_to_wait_serve_item.request_time,
+            )
+        )
+        Hotel.get_instance().rooms[cast_to_wait_serve_item.room_id].AC_running = False
+        RoomInfo.objects.filter(room_id=cast_to_wait_serve_item.room_id).update(
+            AC_running=0
+        )
+
+    def check(self):
         for i in self.serve_queue:
-            if i.room_id == room_id:
-                self.serve_queue.remove(i)
-                wait_item = WaitItem(i.room_id, i.target_temp, i.speed)
-                self.wait_queue.append(wait_item)
-                return
+            match i.speed:
+                case 0:  # 低风速
+                    Hotel.get_instance().rooms[i.room_id].temp = (
+                        round(Hotel.get_instance().rooms[i.room_id].temp - 1 / 3, 4)
+                        if (Hotel.get_instance().rooms[i.room_id].temp - 1 / 3) % 0.1
+                        > 1e-4
+                        else round(
+                            Hotel.get_instance().rooms[i.room_id].temp - 1 / 3, 1
+                        )
+                    )
+                case 1:  # 中风速
+                    Hotel.get_instance().rooms[i.room_id].temp -= 0.5
+                case 2:  # 高风速
+                    Hotel.get_instance().rooms[i.room_id].temp -= 1
+            if (
+                Hotel.get_instance().rooms[i.room_id].temp
+                <= Hotel.get_instance().rooms[i.room_id].target_temp
+            ):
+                Hotel.get_instance().rooms[i.room_id].temp = (
+                    Hotel.get_instance().rooms[i.room_id].target_temp
+                )
+                self.cast_serve_to_wait(i.room_id)
+                self.cast_wait_to_serve()
+        for i in self.wait_queue:
+            if Hotel.get_instance().current_time - i.wait_start_time >= i.wait_time:
+                self.cast_serve_to_wait()
+                self.cast_wait_to_serve(i.room_id)
+        pass
+
+    def cast_wait_to_serve(self, room_id=None):
+        if room_id is None:
+            cast_to_serve_wait_item = min(
+                self.wait_queue, key=lambda wait_item: wait_item.wait_start_time
+            )
+        else:
+            for i in self.wait_queue:
+                if i.room_id == room_id:
+                    cast_to_serve_wait_item = i
+                    break
+        self.wait_queue.remove(cast_to_serve_wait_item)
+        self.serve_queue.append(
+            ServeItem(
+                cast_to_serve_wait_item.room_id,
+                cast_to_serve_wait_item.target_temp,
+                cast_to_serve_wait_item.speed,
+                cast_to_serve_wait_item.request_time,
+            )
+        )
+        Hotel.get_instance().rooms[cast_to_serve_wait_item.room_id].AC_running = True
+        RoomInfo.objects.filter(room_id=cast_to_serve_wait_item.room_id).update(
+            AC_running=1
+        )
 
 
 # 等待对象?
 class WaitItem:
-    def __init__(self, room_id, target_temp, speed, wait_time=2):
+    def __init__(self, room_id, target_temp, speed, request_time, wait_time=2):
         self.room_id = room_id
         self.target_temp = target_temp
         self.speed = speed
         self.wait_time = wait_time
+        self.wait_start_time = Hotel.get_instance().current_time
+        self.request_time = request_time
         pass
 
 
 # 服务对象
 class ServeItem:
-    def __init__(self, room_id, target_temp, speed):
+    def __init__(self, room_id, target_temp, speed, request_time):
         self.room_id = room_id
         self.target_temp = target_temp
         self.speed = speed
-        self.service_time = 0
-        self.detail_record = DetailRecord(room_id, speed)
-        DetailRecordInfo(room_id=room_id, speed=speed).save()
+        self.serve_start_time = Hotel.get_instance().current_time
+        self.detail_record = DetailRecord(
+            room_id, speed, Hotel.get_instance().current_time, self.request_time
+        )
+        self.request_time = request_time
         pass
 
     def change_target_temp(self, target_temp):
@@ -343,11 +461,17 @@ class ServeItem:
 
     def change_speed(self, speed):
         self.speed = speed
+        self.detail_record.service_end_time = Hotel.get_instance().current_time
+        self.detail_record.service_time = (
+            self.detail_record.service_end_time - self.detail_record.service_start_time
+        )
         Hotel.get_instance().reception.orders[self.room_id][
             -1
         ].detailed_records_AC.append(self.detail_record)
-        self.detail_record = DetailRecord(self.room_id, speed)
-        DetailRecordInfo(room_id=self.room_id, speed=speed).save()
+        self.detail_record.store()
+        self.detail_record = DetailRecord(
+            self.room_id, speed, Hotel.get_instance().current_time, self.request_time
+        )
 
     def generate_detailed_record(self):
         pass
