@@ -13,11 +13,11 @@ class Hotel:
         if Hotel.__instance is None:
             Hotel.__instance = self
             Hotel.manager = Manager("syb")
-            Hotel.reception = Reception("syb")
             Hotel.scheduler = Scheduler()
             Hotel.rooms = {}
             for i in RoomInfo.objects.all():
-                Hotel.rooms[i.id] = Room(i.id, i.temp, i.fee_per_day)
+                Hotel.rooms[i.room_id] = Room(i.room_id, i.temp, i.fee_per_day)
+            Hotel.reception = Reception("syb")
             Hotel.current_time = 0
         else:
             return
@@ -53,7 +53,7 @@ class Reception:
     def __init__(self, name):
         self.name = name
         self.customers = []
-        self.orders = {}
+        self.orders = {room_id: [] for room_id in Hotel.get_instance().rooms.keys()}
 
     def register_customer_info(self, customer_id, customer_name, number, date):
         self.customers.append(Customer(customer_id, customer_name, number))
@@ -358,7 +358,7 @@ class Scheduler:
                     cast_to_wait_serve_item = i
                     break
         else:
-            cast_to_wait_serve_item = max(
+            cast_to_wait_serve_item = min(
                 self.serve_queue, key=lambda serve_item: serve_item.serve_start_time
             )
         self.serve_queue.remove(cast_to_wait_serve_item)
@@ -451,7 +451,7 @@ class ServeItem:
         self.speed = speed
         self.serve_start_time = Hotel.get_instance().current_time
         self.detail_record = DetailRecord(
-            room_id, speed, Hotel.get_instance().current_time, self.request_time
+            room_id, speed, Hotel.get_instance().current_time, request_time
         )
         self.request_time = request_time
         pass
