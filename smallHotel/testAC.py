@@ -54,6 +54,13 @@ def test(request):
 def boot(request):
     if request.method == 'POST':
         data = json.loads(request.body.decode('utf-8'))
+        Hotel.get_instance().rooms[1].power_on(32)
+        response = {'code': 1}
+        return JsonResponse(response)
+def shutdown(request):
+    if request.method == 'POST':
+        data = json.loads(request.body.decode('utf-8'))
+        Hotel.get_instance().rooms[1].power_off()
         response = {'code': 1}
         return JsonResponse(response)
 def test(request):
