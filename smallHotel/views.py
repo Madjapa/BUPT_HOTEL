@@ -1,4 +1,4 @@
-from django.shortcuts import render,HttpResponse
+from django.shortcuts import render,HttpResponse,redirect
 from django.http import JsonResponse
 from .system import *
 import json
@@ -15,6 +15,35 @@ def reception(request):
         num = request.POST.get('room_num')
         print(name,num)
     return render(request,"smallHotel/reception.html")
+
+def checkIn(request):
+    if request.method == 'POST':
+        name = request.POST.get('customer_name')
+        id = request.POST.get('id')
+        num = request.POST.get('phone_num')
+        print(name,id,num)
+        Hotel.get_instance().reception.register_customer_info(id,name,num,0)
+        return redirect("http://127.0.0.1:8000/smallHotel/rec/spare")
+    return render(request,"smallHotel/checkIn.html")
+
+def getSpare(request):
+    if request.method == 'POST':
+        num = request.POST.get('room_num')
+        print(num)
+        return redirect("http://127.0.0.1:8000/smallHotel/rec/success")
+    data=Hotel.get_instance().reception.check_room_state(0)
+    dat={"nums":6,
+          "num1":"号房间空闲",
+          "num2":2
+          }
+    return render(request,"smallHotel/spareRoom.html",data)
+
+def checkSuccess(request):
+    data={"tips":"syb"}
+    return render(request,"smallHotel/success.html",data)
+
+def checkOut(request):
+    return render(request,"smallHotel/checkOut.html")
 
 #顾客页面
 def customer(request):

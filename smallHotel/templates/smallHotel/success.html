@@ -14,14 +14,19 @@
             font-size: 1em;
             padding: 12px;
         }
+        #form{
+            margin:20px;
+        }
         #center{
             border: 2px solid black;
             position:absolute;
             left:40%;
             top:30%
         }
-        #form{
-            padding:10px
+        #break{
+            position:absolute;
+            left:44.5%;
+            top:50%
         }
     </style>
     <link rel="stylesheet" href="https://cdn.staticfile.net/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
@@ -35,28 +40,21 @@
             <a href="/smallHotel/rec" class="btn btn-default">返回</a>
         </span>
         <span>进度</span>
-        <span style="color: green;">等级用户信息</span>
+        <span>等级用户信息</span>
         <span>——></span>
         <span>选择房间</span>
         <span>——></span>
-        <span>办理入住成功</span>
+        <span style="color: green;">办理入住成功</span>
     </div>
     <div id="center">
-        <form id="form" action="" method="post">
-                <p>
-                    <label for="d1">姓名:</label>
-                    <input type="text" id='d1' name="customer_name">
-                </p>
-                <p>
-                    <label for="d2">身份证号:</label>
-                    <input type="text" id='d2' name="id">
-                </p>
-                <p>
-                    <label for="d3">手机号码:</label>
-                    <input type="text" id='d3' name="phone_num">
-                </p>
-                <input type="submit" class="btn btn-success btn-block">
-            </form>
+        <div id="form">
+            <h3>办理入住成功</h3>
+            <p>您的房间卡号是:</p>
+            <span>{{ tips }}</span>
+        </div>
+    </div>
+    <div id="break">
+        <a href="/smallHotel/cus" class="btn btn-default">跳转</a>
     </div>
 </body>
 </html>
