@@ -33,7 +33,7 @@ class Hotel:
         for i in Hotel.get_instance().rooms.values():
             if i.AC_status == False and i.temp < i.init_temp:
                 i.temp += 0.5  # 回温每分钟0.5℃
-        Hotel.get_instance().scheduler.check()
+        Hotel.get_instance().scheduler.check_serve_queue()
         pass
 
 
@@ -249,6 +249,11 @@ class Room:
         RoomInfo.objects.filter(room_id=self.id).update(AC_running=0)
         pass
 
+    def stop_running(self):
+        self.scheduler.clear(self.id)
+        self.AC_running = False
+        RoomInfo.objects.filter(room_id=self.id).update(AC_running=0)
+
     # def request_state(self, room_id):
     #     pass
 
@@ -286,6 +291,7 @@ class Scheduler:
                 ].detailed_records_AC.append(i.detail_record)
                 i.detail_record.store()
                 self.serve_queue.remove(i)
+                self.cast_wait_to_serve()
                 return
         pass
 
@@ -351,15 +357,24 @@ class Scheduler:
             return False
         pass
 
-    def cast_serve_to_wait(self, room_id=None):
+    def cast_serve_to_wait(self, room_id=None, *, speed=None):
         if room_id is not None:
             for i in self.serve_queue:
                 if i.room_id == room_id:
                     cast_to_wait_serve_item = i
                     break
         else:
+            if min([i.speed for i in self.serve_queue]) > speed:
+                return False
+            cast_items = [
+                i
+                for i in self.serve_queue
+                if i.speed == min([i.speed for i in self.serve_queue])
+                and Hotel.get_instance().current_time - i.serve_start_time != 0
+            ]
             cast_to_wait_serve_item = min(
-                self.serve_queue, key=lambda serve_item: serve_item.serve_start_time
+                cast_items,
+                key=lambda serve_item: serve_item.serve_start_time,
             )
         self.serve_queue.remove(cast_to_wait_serve_item)
         self.wait_queue.append(
@@ -375,8 +390,14 @@ class Scheduler:
             AC_running=0
         )
 
-    def check(self):
-        for i in self.serve_queue:
+    def check_serve_queue(self):
+        for i in self.serve_queue[:]:
+            if (
+                Hotel.get_instance().rooms[i.room_id].temp
+                <= Hotel.get_instance().rooms[i.room_id].target_temp
+            ):
+                Hotel.get_instance().rooms[i.room_id].stop_running()
+                continue
             match i.speed:
                 case 0:  # 低风速
                     Hotel.get_instance().rooms[i.room_id].temp = (
@@ -398,18 +419,44 @@ class Scheduler:
                 Hotel.get_instance().rooms[i.room_id].temp = (
                     Hotel.get_instance().rooms[i.room_id].target_temp
                 )
-                self.cast_serve_to_wait(i.room_id)
-                self.cast_wait_to_serve()
-        for i in self.wait_queue:
-            if Hotel.get_instance().current_time - i.wait_start_time >= i.wait_time:
-                self.cast_serve_to_wait()
+                Hotel.get_instance().rooms[i.room_id].stop_running()
+
+    def check_wait_queue(self):
+        cast_items = [
+            i
+            for i in self.wait_queue
+            if Hotel.get_instance().current_time - i.wait_start_time >= i.wait_time
+        ]
+        cast_items.sort(key=lambda wait_item: wait_item.wait_start_time)
+        for i in cast_items:
+            if (
+                min(
+                    [
+                        (Hotel.get_instance().current_time - i.serve_start_time)
+                        for i in self.serve_queue
+                    ]
+                )
+                == 0
+            ):
+                break
+            if self.cast_serve_to_wait(speed=i.speed) == False:
+                i.wait_time += 2
+            else:
                 self.cast_wait_to_serve(i.room_id)
         pass
 
     def cast_wait_to_serve(self, room_id=None):
         if room_id is None:
+            cast_items = [
+                i
+                for i in self.wait_queue
+                if i.speed == max([i.speed for i in self.wait_queue])
+            ]
+            if len(cast_items) == 0:
+                return
             cast_to_serve_wait_item = min(
-                self.wait_queue, key=lambda wait_item: wait_item.wait_start_time
+                cast_items,
+                key=lambda wait_item: wait_item.wait_start_time,
             )
         else:
             for i in self.wait_queue:

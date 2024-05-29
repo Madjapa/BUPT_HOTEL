@@ -64,4 +64,23 @@ def test():
                         Hotel.get_instance().rooms[room_id].change_temp(
                             -1, float(operation)
                         )
+
+        Hotel.get_instance().scheduler.check_wait_queue()
+
+        output(time)
+
         Hotel.get_instance().time_forward()
+
+
+def output(time):
+    speed_display = ["低", "中", "高"]
+    print(time, end="\t")
+    for room_id, room in Hotel.get_instance().rooms.items():
+        print(room.temp, room.target_temp, speed_display[room.speed], end="\t")
+    print(
+        "["
+        + ",".join([str(i.room_id) for i in Hotel.get_instance().scheduler.serve_queue])
+        + "]",
+        end="\t",
+    )
+    print([i.room_id for i in Hotel.get_instance().scheduler.wait_queue])
