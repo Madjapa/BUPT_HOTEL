@@ -36,4 +36,5 @@ urlpatterns = [
     path("cus/shutdown/",testAC.test,name='yy'),
     path("mon/targetTemp/",views.getTargetTemp,name='yyy'),
     path("mon/roomTemp/",views.getRoomTemp,name='yyyy'),
+    path("test_case",views.testCase),
 ]

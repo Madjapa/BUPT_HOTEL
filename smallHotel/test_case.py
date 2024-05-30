@@ -42,6 +42,8 @@ def test():
     for i in range(1, 1 + 5):
         Hotel.get_instance().reception.create_accommodation_order(-1, i)
 
+    result = '<table cellspacing="10"><tr><td>时间(min)</td><td>房间1</td><td>房间2</td><td>房间3</td><td>房间4</td><td>房间5</td><td>服务队列</td><td>等待队列</td></tr>'
+
     for time in range(len(test_case)):
         for j in range(5):
             room_id = j + 1
@@ -68,19 +70,52 @@ def test():
         Hotel.get_instance().scheduler.check_wait_queue()
 
         output(time)
+        result += output(time)
 
         Hotel.get_instance().time_forward()
 
+    return result + "</table>"
+
 
 def output(time):
+    s = ""
     speed_display = ["低", "中", "高"]
     print(time, end="\t")
+    s += "<tr>" + '<td align="center">' + str(time) + "</td>"
     for room_id, room in Hotel.get_instance().rooms.items():
         print(room.temp, room.target_temp, speed_display[room.speed], end="\t")
+        s += (
+            "<td>"
+            + str(room.temp)
+            + " "
+            + str(room.target_temp)
+            + " "
+            + speed_display[room.speed]
+            + "</td>"
+        )
     print(
         "["
         + ",".join([str(i.room_id) for i in Hotel.get_instance().scheduler.serve_queue])
         + "]",
         end="\t",
     )
+    s += (
+        "<td>"
+        + "["
+        + ", ".join(
+            [str(i.room_id) for i in Hotel.get_instance().scheduler.serve_queue]
+        )
+        + "]"
+        + "</td>"
+    )
     print([i.room_id for i in Hotel.get_instance().scheduler.wait_queue])
+    s += (
+        "<td>"
+        + "["
+        + ", ".join([str(i.room_id) for i in Hotel.get_instance().scheduler.wait_queue])
+        + "]"
+        + "</td>"
+        + "</tr>"
+    )
+
+    return s

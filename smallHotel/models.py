@@ -17,7 +17,7 @@ class RoomInfo(models.Model):
     state = models.BooleanField(default=False)
     AC_status = models.BooleanField(default=False)
     AC_running = models.BooleanField(default=False)
-    customer_id = models.IntegerField()
+    customer_id = models.IntegerField(blank=True, null=True)
     fee_per_day = models.FloatField()
 
 
@@ -30,8 +30,8 @@ class BillInfo(models.Model):
 class DetailRecordInfo(models.Model):
     objects = models.Manager()
     room_id = models.IntegerField()
-    service_start_time = models.IntegerField()
-    service_end_time = models.IntegerField()
-    service_time = models.IntegerField()
+    service_start_time = models.IntegerField(blank=True, null=True)
+    service_end_time = models.IntegerField(blank=True, null=True)
+    service_time = models.IntegerField(blank=True, null=True)
     speed = models.IntegerField()
-    fee = models.FloatField()
+    fee = models.FloatField(blank=True, null=True)
