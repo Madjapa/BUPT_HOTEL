@@ -1,3 +1,4 @@
+import random
 from django.shortcuts import render,HttpResponse,redirect
 from django.http import JsonResponse
 from .system import *
@@ -47,7 +48,8 @@ def getSpare(request):
     return render(request,"smallHotel/spareRoom.html",state)
 
 def checkSuccess(request):
-    data={"tips":"syb"}
+    num = random.Random().randint(1000,1999)
+    data={"tips":num}
     return render(request,"smallHotel/success.html",data)
 
 def checkOut(request):

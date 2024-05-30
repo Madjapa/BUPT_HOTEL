@@ -32,6 +32,7 @@ class Hotel:
         for i in Hotel.get_instance().rooms.values():
             if i.AC_status == False and i.temp < i.init_temp:
                 i.temp += 0.5  # 回温每分钟0.5℃
+                RoomInfo.objects.filter(room_id=i.id).update(temp=i.temp)
         Hotel.get_instance().scheduler.check_serve_queue()
         pass
 
@@ -64,7 +65,7 @@ class Reception:
 
     def create_accommodation_order(self, customer_id, room_id):
         # TODO: 处理对已有订单即已入住的房间进行的创建订单操作
-        self.orders[room_id].append(Order(customer_id, room_id))
+        self.orders[int(room_id)].append(Order(customer_id, room_id))
         room = Hotel.get_instance().rooms[int(room_id)]
         room.state = True
         room.customer_id = customer_id
@@ -413,6 +414,7 @@ class Scheduler:
                     Hotel.get_instance().rooms[i.room_id].temp -= 0.5
                 case 2:  # 高风速
                     Hotel.get_instance().rooms[i.room_id].temp -= 1
+            RoomInfo.objects.filter(room_id=i.room_id).update(temp=Hotel.get_instance().rooms[i.room_id].temp)
             if (
                 Hotel.get_instance().rooms[i.room_id].temp
                 <= Hotel.get_instance().rooms[i.room_id].target_temp
