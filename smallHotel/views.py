@@ -11,10 +11,6 @@ def admin(request):
 
 #接待员页面
 def reception(request):
-    if request.method == 'POST':
-        name = request.POST.get('username')
-        num = request.POST.get('room_num')
-        print(name,num)
     return render(request,"smallHotel/reception.html")
 
 def checkIn(request):
@@ -31,13 +27,24 @@ def getSpare(request):
     if request.method == 'POST':
         num = request.POST.get('room_num')
         print(num)
+        customer_id = Hotel.get_instance().reception.customers[-1].id
+        print(customer_id)
+        Hotel.get_instance().reception.create_accommodation_order(customer_id,num)
         return redirect("http://127.0.0.1:8000/smallHotel/rec/success")
     data=Hotel.get_instance().reception.check_room_state(0)
-    dat={"nums":6,
-          "num1":"号房间空闲",
-          "num2":2
-          }
-    return render(request,"smallHotel/spareRoom.html",data)
+    for i in range(1,6):
+        if data[i] == False:
+            data[i] = "号房间空闲"
+        else:
+            data[i] = "号房间不空闲"
+    state = {
+        "room1":data[1],
+        "room2":data[2],
+        "room3":data[3],
+        "room4":data[4],
+        "room5":data[5],
+    }
+    return render(request,"smallHotel/spareRoom.html",state)
 
 def checkSuccess(request):
     data={"tips":"syb"}

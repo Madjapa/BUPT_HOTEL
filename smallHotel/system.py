@@ -1,6 +1,5 @@
 from smallHotel.models import *
 
-
 class Hotel:
     __instance = None
     manager = None
@@ -56,18 +55,20 @@ class Reception:
         self.orders = {room_id: [] for room_id in Hotel.get_instance().rooms.keys()}
 
     def register_customer_info(self, customer_id, customer_name, number, date):
+        CustomerInfo.objects.create(name=customer_name,number=number,customer_id=customer_id)
         self.customers.append(Customer(customer_id, customer_name, number))
         return True  # return isOK
 
     def check_room_state(self, date):
-        return {i.id: i.state for i in Hotel.get_instance().rooms.values()}
+        return {i.room_id: i.state for i in RoomInfo.objects.all()}
 
     def create_accommodation_order(self, customer_id, room_id):
         # TODO: 处理对已有订单即已入住的房间进行的创建订单操作
-        self.orders[room_id].append(Order(customer_id, room_id))
-        room = Hotel.get_instance().rooms[room_id]
+        #self.orders[room_id].append(Order(customer_id, room_id))
+        room = Hotel.get_instance().rooms[int(room_id)]
         room.state = True
         room.customer_id = customer_id
+        RoomInfo.objects.filter(room_id=room_id).update(customer_id=customer_id, state=1)
 
     def deposite(self, amount, room_id):
         self.orders[room_id][-1].deposit = amount
