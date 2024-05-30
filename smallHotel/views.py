@@ -2,6 +2,7 @@ from django.shortcuts import render,HttpResponse,redirect
 from django.http import JsonResponse
 from .system import *
 import json
+from smallHotel.test_case import *
 
 # Create your views here.
 #主页
@@ -109,3 +110,6 @@ def getRoomTemp(request):
         "roomTemp": temp
     }
     return JsonResponse(response)
+
+def testCase(request):
+    return HttpResponse(test())
