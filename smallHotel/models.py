@@ -20,20 +20,11 @@ class RoomInfo(models.Model):
     customer_id = models.IntegerField(blank=True, null=True)
     fee_per_day = models.FloatField()
 
-class DetailRecordInfo(models.Model):
-    objects = models.Manager()
-    room_id = models.IntegerField()
-    service_start_time = models.IntegerField(blank=True, null=True)
-    service_end_time = models.IntegerField(blank=True, null=True)
-    service_time = models.IntegerField(blank=True, null=True)
-    speed = models.IntegerField()
-    fee = models.FloatField(blank=True, null=True)
-
 class BillInfo(models.Model):
     objects = models.Manager()
     tag = models.CharField(max_length=32)
     room_id = models.IntegerField()
-    fee = models.FloatField()
+    fee = models.FloatField(blank=True, null=True)
 
 class DetailRecordInfo(models.Model):
     objects = models.Manager()

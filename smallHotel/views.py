@@ -54,8 +54,8 @@ def checkOut(request):
     return render(request,"smallHotel/checkOut.html")
 
 #顾客页面
-def customer(request):
-    return render(request, "smallHotel/customer.html")
+def customer(request,roomid):
+    return render(request, "smallHotel/customer.html",{"roomid":roomid})
 
 #酒店管理员
 def manager(request):
@@ -70,15 +70,15 @@ def powerOn(request):
         data = json.loads(request.body.decode('utf-8'))
         roomid = data.get('roomid')
         roomtemp = data.get('roomtemp')
-        Hotel.get_instance().rooms[room__id].power_on(temp)
-        return JsonResponse({'status': 'success'})
+        Hotel.get_instance().rooms[roomid].power_on(roomtemp)
+        return JsonResponse({'code': 1})
 
 def powerOff(request):
     if request.method == 'POST':
         data = json.loads(request.body.decode('utf-8'))
         roomid = data.get('roomid')
-        Hotel.get_instance().rooms[room__id].power_off()
-        return JsonResponse({'status': 'success'})
+        Hotel.get_instance().rooms[roomid].power_off()
+        return JsonResponse({'code': 1})
 
 def tempSubmit(request):
     if request.method == 'POST':
@@ -117,6 +117,24 @@ def getRoomTemp(request):
         "roomTemp": temp
     }
     return JsonResponse(response)
+
+def getExp(request):
+    if request.method == 'GET':
+        roomid = request.GET['roomid']
+        if roomid == '1':
+            response = {'expenses' : '10'}
+        elif roomid == '2':
+            response = {'expenses' : '20'}
+        else:
+            response = {'expenses' : '30'}
+
+        return JsonResponse(response)
+
+def getTimer(request):
+    if request.method == 'POST':
+        Hotel.get_instance().scheduler.check_wait_queue()
+        Hotel.get_instance().time_forward()
+    return render(request,"smallHotel/timer.html")
 
 def testCase(request):
     return HttpResponse(test())

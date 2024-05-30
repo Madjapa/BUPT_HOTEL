@@ -64,7 +64,7 @@ class Reception:
 
     def create_accommodation_order(self, customer_id, room_id):
         # TODO: 处理对已有订单即已入住的房间进行的创建订单操作
-        #self.orders[room_id].append(Order(customer_id, room_id))
+        self.orders[room_id].append(Order(customer_id, room_id))
         room = Hotel.get_instance().rooms[int(room_id)]
         room.state = True
         room.customer_id = customer_id
@@ -287,7 +287,7 @@ class Scheduler:
                     i.detail_record.service_end_time
                     - i.detail_record.service_start_time
                 )
-                Hotel.get_instance().reception.orders[i.room_id][
+                Hotel.get_instance().reception.orders[int(i.room_id)][
                     -1
                 ].detailed_records_AC.append(i.detail_record)
                 i.detail_record.store()
