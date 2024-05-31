@@ -210,7 +210,9 @@ class DetailRecord:
 
 # 客房
 class Room:
-    def __init__(self, id, temp, fee_per_day, *, days, target_temp,speed,state,AC_status,AC_running,customer_id):
+    def __init__(self, id, temp, fee_per_day, *,
+        days=0, target_temp=25, speed=1, state=False, AC_status=False, AC_running=False, customer_id=None,
+    ):
         self.id = id
         self.days = days
         self.temp = temp

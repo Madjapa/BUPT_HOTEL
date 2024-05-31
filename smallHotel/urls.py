@@ -37,4 +37,5 @@ urlpatterns = [
     path("cus/getStatus/",views.getACStatus,name="state"),
     path("timer",views.getTimer,name='yyyyy'),
     path("test_case/",views.testCase),
+    path("init_room/",views.initRoom),
 ]

@@ -176,3 +176,7 @@ def getTimer(request):
 
 def testCase(request):
     return HttpResponse(test())
+
+def initRoom(request):
+    init_rooms()
+    return HttpResponse()

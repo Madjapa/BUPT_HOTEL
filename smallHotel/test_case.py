@@ -30,13 +30,26 @@ test_case = [
 ]
 
 
-def test():
+def init_rooms():
     RoomInfo.objects.all().delete()
     RoomInfo(room_id=1, temp=32, fee_per_day=100).save()
     RoomInfo(room_id=2, temp=28, fee_per_day=125).save()
     RoomInfo(room_id=3, temp=30, fee_per_day=150).save()
     RoomInfo(room_id=4, temp=29, fee_per_day=200).save()
     RoomInfo(room_id=5, temp=35, fee_per_day=100).save()
+
+    if Hotel.rooms:
+        Hotel.get_instance().rooms = {}
+        for i in RoomInfo.objects.all():
+            Hotel.get_instance().rooms[i.room_id] = Room(
+                i.room_id,
+                i.temp,
+                i.fee_per_day,
+            )
+
+
+def test():
+    init_rooms()
 
     for i in range(1, 1 + 5):
         Hotel.get_instance().reception.create_accommodation_order(-1, i)
@@ -68,7 +81,6 @@ def test():
 
         Hotel.get_instance().scheduler.check_wait_queue()
 
-        output(time)
         result += output(time)
 
         Hotel.get_instance().time_forward()
