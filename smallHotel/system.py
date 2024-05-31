@@ -15,7 +15,7 @@ class Hotel:
             Hotel.scheduler = Scheduler()
             Hotel.rooms = {}
             for i in RoomInfo.objects.all():
-                Hotel.rooms[i.room_id] = Room(i.room_id, i.temp, i.fee_per_day)
+                Hotel.rooms[i.room_id] = Room(i.room_id, i.temp, i.fee_per_day,days=i.days,target_temp=i.target_temp,speed=i.speed,state=i.state,AC_status=i.AC_status,AC_running=i.AC_running,customer_id=i.customer_id)
             Hotel.reception = Reception("syb")
             Hotel.current_time = 0
         else:
@@ -199,17 +199,17 @@ class DetailRecord:
 
 # 客房
 class Room:
-    def __init__(self, id, temp, fee_per_day):
+    def __init__(self, id, temp, fee_per_day, *, days, target_temp,speed,state,AC_status,AC_running,customer_id):
         self.id = id
-        self.days = 0
+        self.days = days
         self.temp = temp
-        self.target_temp = 25  # 制冷目标温度默认为25℃
-        self.speed = 1  # 默认中风速
-        self.state = False  # 是否有顾客入住
-        self.AC_status = False
-        self.AC_running = False
+        self.target_temp = target_temp
+        self.speed = speed
+        self.state = state  # 是否有顾客入住
+        self.AC_status = AC_status
+        self.AC_running = AC_running
         self.scheduler = None
-        self.customer_id = None
+        self.customer_id = customer_id
         self.fee_per_day = fee_per_day
         self.init_temp = temp
 

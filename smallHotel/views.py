@@ -137,18 +137,18 @@ def monitor(request):
 def getSpeed(request):
     if request.method == 'GET':
         roomid = request.GET.get('roomid',"")
-    temp = Hotel.get_instance().rooms[int(roomid)].target_temp
+    speed = Hotel.get_instance().rooms[int(roomid)].speed
     response = {
-        "windSpeed": 0
+        "windSpeed": speed
     }
     return JsonResponse(response)
 
 def getStatus(request):
     if request.method == 'GET':
         roomid = request.GET.get('roomid',"")
-    temp = Hotel.get_instance().rooms[int(roomid)].target_temp
+    AC_running = Hotel.get_instance().rooms[int(roomid)].AC_running
     response = {
-        "status": 1
+        "status": AC_running
     }
     return JsonResponse(response)
 
@@ -161,14 +161,6 @@ def getTargetTemp(request):
     }
     return JsonResponse(response)
 
-def getRoomTemp(request):
-    if request.method == 'GET':
-        roomid = request.GET.get('roomid',"")
-    temp = Hotel.get_instance().rooms[int(roomid)].target_temp
-    response = {
-        "roomTemp": 7
-    }
-    return JsonResponse(response)
 
 def testCase(request):
     return HttpResponse(test())
