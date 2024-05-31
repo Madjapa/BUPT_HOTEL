@@ -86,17 +86,6 @@ def powerOff(request):
         Hotel.get_instance().rooms[roomid].power_off()
         return JsonResponse({'code': 1})
 
-def getExp(request):
-    if request.method == 'GET':
-        roomid = request.GET['roomid']
-        if roomid == '1':
-            response = {'expenses' : '10'}
-        elif roomid == '2':
-            response = {'expenses' : '20'}
-        else:
-            response = {'expenses' : '30'}
-        return JsonResponse(response)
-
 def getRoomTemp(request):
     if request.method == 'GET':
         roomid = request.GET.get('roomid',"")
@@ -112,7 +101,7 @@ def tempSubmit(request):
         data = json.loads(request.body.decode('utf-8'))
         roomid = data.get('roomid')
         temp = data.get('temp')
-        Hotel.get_instance().rooms[roomid].target_temp = temp
+        Hotel.get_instance().rooms[roomid].change_temp(roomid,temp)
         return JsonResponse({'code': '1'})
 
 def flowSubmit(request):
@@ -120,7 +109,7 @@ def flowSubmit(request):
         data = json.loads(request.body.decode('utf-8'))
         roomid = data.get('roomid')
         speed = data.get('windspeed')
-        Hotel.get_instance().rooms[roomid].speed = speed
+        Hotel.get_instance().rooms[roomid].change_speed(roomid,speed)
     response = {'code': 1}
     return JsonResponse(response)
 
@@ -149,6 +138,15 @@ def getStatus(request):
     AC_running = Hotel.get_instance().rooms[int(roomid)].AC_running
     response = {
         "status": AC_running
+    }
+    return JsonResponse(response)
+
+def getACStatus(request):
+    if request.method == 'GET':
+        roomid = request.GET.get('roomid',"")
+    AC_status = Hotel.get_instance().rooms[int(roomid)].AC_status
+    response = {
+        "status": AC_status
     }
     return JsonResponse(response)
 

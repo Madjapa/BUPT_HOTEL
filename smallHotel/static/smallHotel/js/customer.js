@@ -68,6 +68,7 @@ function tempSubmit(){
     //提交温度给后端（提交当前显示在温度调节器的目标温度即可）
     axiosInstance.post('temperature/',{roomid: roomid,temp: targetTemp})
     .then(response =>{
+        submit = 1;
         console.log(response.data);
     })
     .catch(error =>{
@@ -101,7 +102,6 @@ function windspeedAdjust(){//风速调节
         document.getElementById('high_speed_button').classList.remove("clicked")
     }else{
         var windspeed = 2;
-        this.classList.add("bold");
     }
     axiosInstance.post('windSpeed/',{roomid: roomid,windspeed: windspeed})
     .then(function(response){
@@ -135,7 +135,8 @@ function requestStatus(Roomid){
     axiosInstance.get('getStatus/', {params:{roomid: roomid}})
     .then(function (response) {
         var state = response.data.status;
-        if (state == 0 && document.getElementById('status').getAttribute('value') == '1'){
+        if (state == 0 && document.getElementById('status').getAttribute('value') == '1' && submit == 1){
+            submit = 0;
             ACSwitch();
         }
     })
@@ -147,11 +148,19 @@ function ACSwitch(){//空调开关机（以关机->开机为例）
     var status = document.getElementById('status');
     if(status.getAttribute('value')=='0'){
         status.setAttribute('value','1');
-
+        //开机并发送当前房间温度给后端
+        axiosInstance.post('boot/',{roomid: roomid,temp: temp})
+        .then(function(response){
+            console.log(response)
+            getStatus = setInterval(requestStatus,1000);
+        })
+        .catch(error =>{
+            console.log("error");
+        });
         btnFuncAdd();
         bootfront();
-
     }else{
+        clearInterval(getStatus);
         status.setAttribute('value','0');
         btnFuncCease();
         shutdownfront();
@@ -166,24 +175,16 @@ function ACSwitch(){//空调开关机（以关机->开机为例）
 }
 function init(){
 //通信
-    //开机并发送当前房间温度给后端
-    axiosInstance.post('boot/',{roomid: roomid,temp: temp})
-    .then(function(response){
-        if(response.data.code == 1){
-            getExp = setInterval(requestExp,1000);//请求累计费用及房间温度
-            getRoomtemp = setInterval(requestRoomtemp,1000);
-            getStatus = setInterval(requestStatus,1000);
-        }
-    })
-    .catch(error =>{
-        console.log("error");
-    });
+    getExp = setInterval(requestExp,1000);//请求累计费用及房间温度
+    getRoomtemp = setInterval(requestRoomtemp,1000);
+    //getStatus = setInterval(requestStatus,1000);
+
 }
 function test(){
 }
 var temp = 21;//初始房间温度
 var targetTemp = 26;//缺省目标温度
-var tempTimer,getExp,getRoomtemp;
+var tempTimer,getExp,getRoomtemp,getStatus;
 var roomid = 1;
-
+var submit = 0;
 init();

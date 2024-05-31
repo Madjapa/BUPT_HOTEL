@@ -34,6 +34,7 @@ urlpatterns = [
     path("cus/roomTemp/",views.getRoomTemp,name='yy'),
     path("cus/temperature/",views.tempSubmit,name='sgd'),
     path("cus/windSpeed/",views.flowSubmit,name='xjj'),
+    path("cus/getStatus/",views.getACStatus,name="state"),
     path("timer",views.getTimer,name='yyyyy'),
     path("test_case/",views.testCase),
 ]
