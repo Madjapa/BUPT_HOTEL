@@ -1,0 +1,54 @@
+<!--前台办理入住界面-->
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>接待员界面</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'smallHotel/css/receStyle.css' %}">
+    <style type="text/css">
+        #checkin{
+            border: 2px solid black;
+            width:200px;
+            height:200px;
+            position: absolute;
+            left: 30%;
+            top: 30%;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+        }
+        #checkout{
+            border: 2px solid black;
+            width:200px;
+            height:200px;
+            position: absolute;
+            left: 60%;
+            top: 30%;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+        }
+    </style>
+</head>
+<body>
+<div>
+    <h1>酒店前台系统</h1>
+    <div id="checkin">
+        <div>
+            <a href="checkin"><img src="../../static/smallHotel/svg/house-add.svg" alt="Bootstrap" width="100" height="100"></a>
+            <p align="center">入住</p>
+        </div>
+    </div>
+    <div id="checkout">
+        <div>
+            <a href="/smallHotel/rec/checkout" ><img src="../../static/smallHotel/svg/coin.svg" alt="Bootstrap" width="100" height="100"></a>
+            <p align="center">结账</p>
+        </div>
+    </div>
+</div>
+</body>
+</html>

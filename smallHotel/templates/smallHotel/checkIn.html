@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'smallHotel/boostrap/css/bootstrap.min.css' %}"> <!--need to change-->
+    <style>
+        #front{
+            width:1000px;
+        }
+        #front span {
+            font-size: 1em;
+            padding: 12px;
+        }
+        #center{
+            border: 2px solid black;
+            position:absolute;
+            left:40%;
+            top:30%
+        }
+        #form{
+            padding:10px
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdn.staticfile.net/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+	<script src="https://cdn.staticfile.net/jquery/2.1.1/jquery.min.js"></script>
+	<script src="https://cdn.staticfile.net/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<body>
+    <h1>入住</h1>
+    <div id="front">
+        <span id="return">
+            <a href="/smallHotel/rec" class="btn btn-default">返回</a>
+        </span>
+        <span>进度</span>
+        <span style="color: green;">等级用户信息</span>
+        <span>——></span>
+        <span>选择房间</span>
+        <span>——></span>
+        <span>办理入住成功</span>
+    </div>
+    <div id="center">
+        <form id="form" action="" method="post">
+                <p>
+                    <label for="d1">姓名:</label>
+                    <input type="text" id='d1' name="customer_name">
+                </p>
+                <p>
+                    <label for="d2">身份证号:</label>
+                    <input type="text" id='d2' name="id">
+                </p>
+                <p>
+                    <label for="d3">手机号码:</label>
+                    <input type="text" id='d3' name="phone_num">
+                </p>
+                <input type="submit" class="btn btn-success btn-block">
+            </form>
+    </div>
+</body>
+</html>
