@@ -524,4 +524,18 @@ class ServeItem:
         )
 
     def generate_detailed_record(self):
-        pass
+    
+    # 计算服务时间
+     self.service_time = self.service_end_time - self.service_start_time
+    
+    # 计算费用
+     self.fee = self.calculate_fee()
+    
+    # 保存记录
+     self.store()
+
+def calculate_fee(self):
+    
+    fee_rate = 10  # 费率,单位为元/小时
+    fee = (self.service_time.total_seconds() / 3600) * fee_rate
+    return fee
