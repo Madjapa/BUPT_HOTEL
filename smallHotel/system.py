@@ -18,6 +18,7 @@ class Hotel:
                 Hotel.rooms[i.room_id] = Room(i.room_id, i.temp, i.fee_per_day)
             Hotel.reception = Reception("syb")
             Hotel.current_time = 0
+
         else:
             return
 
@@ -182,9 +183,10 @@ class DetailRecord:
         self.service_end_time = None
         self.service_time = None
         self.speed = speed
+        self.fee = 0
         # TODO: 当前费用
         # TODO: 费率
-        self.fee = None  # ?
+        self.fee_rate = 1
 
     def store(self):
         DetailRecordInfo(
@@ -212,6 +214,7 @@ class Room:
         self.customer_id = None
         self.fee_per_day = fee_per_day
         self.init_temp = temp
+        self.accommodation_fee = 0.0
 
     def power_on(self, current_room_temp):
         if self.AC_status == False:
@@ -410,10 +413,16 @@ class Scheduler:
                             Hotel.get_instance().rooms[i.room_id].temp - 1 / 3, 1
                         )
                     )
+                    i.detail_record.fee += 1/3
+                    Hotel.get_instance().rooms[i.room_id].accommodation_fee += 1/3
                 case 1:  # 中风速
                     Hotel.get_instance().rooms[i.room_id].temp -= 0.5
+                    i.detail_record.fee += 1/2
+                    Hotel.get_instance().rooms[i.room_id].accommodation_fee += 1/2
                 case 2:  # 高风速
                     Hotel.get_instance().rooms[i.room_id].temp -= 1
+                    i.detail_record.fee += 1
+                    Hotel.get_instance().rooms[i.room_id].accommodation_fee += 1
             RoomInfo.objects.filter(room_id=i.room_id).update(temp=Hotel.get_instance().rooms[i.room_id].temp)
             if (
                 Hotel.get_instance().rooms[i.room_id].temp

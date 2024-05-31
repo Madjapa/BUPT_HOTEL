@@ -134,14 +134,8 @@ def getRoomTemp(request):
 
 def getExp(request):
     if request.method == 'GET':
-        roomid = request.GET['roomid']
-        if roomid == '1':
-            response = {'expenses' : '10'}
-        elif roomid == '2':
-            response = {'expenses' : '20'}
-        else:
-            response = {'expenses' : '30'}
-
+        roomid = int(request.GET['roomid'])
+        response = {'expenses': Hotel.get_instance().rooms[roomid].accommodation_fee}
         return JsonResponse(response)
 
 def getTimer(request):
