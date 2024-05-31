@@ -85,7 +85,7 @@ function heatButton(){//制热
 function clearWindCssEcp(windspeed){
 
 }
-/*
+
 function windspeedAdjust(){//风速调节
     //被选中风速条从低到该风速条显示颜色，其余为灰色
     //显示当前风速
@@ -105,7 +105,7 @@ function windspeedAdjust(){//风速调节
     .catch(error =>{
         console.log("getExp error");
     });
-}*/
+}
 function requestExp(){
     axiosInstance.get('getExpenses/',{params: {roomid: roomid}})
     .then(function(response){

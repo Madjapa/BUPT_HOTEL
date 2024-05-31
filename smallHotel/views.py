@@ -27,9 +27,7 @@ def checkIn(request):
 def getSpare(request):
     if request.method == 'POST':
         num = request.POST.get('room_num')
-        print(num)
         customer_id = Hotel.get_instance().reception.customers[-1].id
-        print(customer_id)
         Hotel.get_instance().reception.create_accommodation_order(customer_id,num)
         return redirect("http://127.0.0.1:8000/smallHotel/rec/success")
     data=Hotel.get_instance().reception.check_room_state(0)
@@ -53,7 +51,21 @@ def checkSuccess(request):
     return render(request,"smallHotel/success.html",data)
 
 def checkOut(request):
+    if request.method == 'POST':
+        roomid = int(request.POST.get('room_id'))
+        return redirect("http://127.0.0.1:8000/smallHotel/rec/detail/"+str(roomid))
     return render(request,"smallHotel/checkOut.html")
+
+def getDetail(request, roomid):
+    Hotel.get_instance().reception.process_checkout(roomid)
+    AC_fee = Hotel.get_instance().reception.orders[roomid][-1].AC_bill.fee
+    accommodation_fee = Hotel.get_instance().reception.orders[roomid][-1].accommodation_bill.fee
+    data={
+        "a":AC_fee,
+        "b":accommodation_fee,
+        "c":AC_fee + accommodation_fee,
+    }
+    return render(request,"smallHotel/detail.html",data)
 
 #顾客页面
 def customer(request,roomid):

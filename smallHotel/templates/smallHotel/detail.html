@@ -19,9 +19,18 @@
             position:absolute;
             left:35%;
             top:30%
+            weight:400px;
         }
         #form{
             padding:20px
+        }
+        #form span {
+            font-size: 1em;
+            padding: 12px;
+        }
+        #detail {
+            position:absolute;
+            top:50%
         }
     </style>
     <link rel="stylesheet" href="https://cdn.staticfile.net/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
@@ -46,13 +55,13 @@
         <span>结账结束</span>
     </div>
     <div id="center">
-        <form id="form" action="" method="post">
-                <p>
-                    <label for="d1">请输入房间号:</label>
-                    <input type="text" id='d1' name="room_id">
-                </p>
-                <input type="submit" class="btn btn-success btn-block">
-        </form>
+        <div id="form"><span>住宿费:</span><span>{{a}}</span></div>
+        <div id="form"><span>空调费:</span><span>{{b}}</span></div>
+        <div id="form"><span>总费用:</span><span>{{c}}</span></div>
+    </div>
+    <div id="detail">
+        <h3>查看详单:</h3>>
+        <a href="../../static/smallHotel/detailRecord.csv" download>Download CSV</a>
     </div>
 </body>
 </html>
