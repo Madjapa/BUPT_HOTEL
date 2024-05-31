@@ -56,6 +56,10 @@ class Reception:
         self.customers = []
         self.orders = {room_id: [] for room_id in Hotel.get_instance().rooms.keys()}
 
+        for i in Hotel.get_instance().rooms.values():
+            if i.state:
+                self.orders[i.id].append(Order(i.customer_id, i.id))
+
     def register_customer_info(self, customer_id, customer_name, number, date):
         CustomerInfo.objects.create(name=customer_name,number=number,customer_id=customer_id)
         self.customers.append(Customer(customer_id, customer_name, number))
@@ -258,6 +262,8 @@ class Room:
         self.scheduler.clear(self.id)
         self.AC_running = False
         RoomInfo.objects.filter(room_id=self.id).update(AC_running=0)
+        self.AC_status = False
+        RoomInfo.objects.filter(room_id=self.id).update(AC_status=0)
 
     # def request_state(self, room_id):
     #     pass
@@ -291,9 +297,10 @@ class Scheduler:
                     i.detail_record.service_end_time
                     - i.detail_record.service_start_time
                 )
-                Hotel.get_instance().reception.orders[int(i.room_id)][
-                    -1
-                ].detailed_records_AC.append(i.detail_record)
+                if i.room_id in Hotel.get_instance().reception.orders:
+                    Hotel.get_instance().reception.orders[i.room_id][
+                        -1
+                    ].detailed_records_AC.append(i.detail_record)
                 i.detail_record.store()
                 self.serve_queue.remove(i)
                 self.cast_wait_to_serve()
