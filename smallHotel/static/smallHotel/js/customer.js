@@ -131,6 +131,18 @@ function requestRoomtemp(){
         console.log("getRoomTemp error");
     });
 }
+function requestStatus(Roomid){
+    axiosInstance.get('getStatus/', {params:{roomid: roomid}})
+    .then(function (response) {
+        var state = response.data.status;
+        if (state == 0 && document.getElementById('status').getAttribute('value') == '1'){
+            ACSwitch();
+        }
+    })
+    .catch(function (error) {
+        console.log("getStatus error at room: " + String(roomid));
+    });
+}
 function ACSwitch(){//空调开关机（以关机->开机为例）
     var status = document.getElementById('status');
     if(status.getAttribute('value')=='0'){
@@ -138,21 +150,8 @@ function ACSwitch(){//空调开关机（以关机->开机为例）
 
         btnFuncAdd();
         bootfront();
-    //通信
-        //开机并发送当前房间温度给后端
-        axiosInstance.post('boot/',{roomid: roomid,temp: temp})
-        .then(function(response){
-            if(response.data.code == 1){
-                getExp = setInterval(requestExp,1000);//请求累计费用及房间温度
-                getRoomtemp = setInterval(requestRoomtemp,1000);
-            }
-        })
-        .catch(error =>{
-            console.log("error");
-        });
-    }else{//关机后停止请求累计费用及房间温度
-        clearInterval(getExp);
-        clearInterval(getRoomtemp);
+
+    }else{
         status.setAttribute('value','0');
         btnFuncCease();
         shutdownfront();
@@ -165,9 +164,26 @@ function ACSwitch(){//空调开关机（以关机->开机为例）
         });
     }
 }
+function init(){
+//通信
+    //开机并发送当前房间温度给后端
+    axiosInstance.post('boot/',{roomid: roomid,temp: temp})
+    .then(function(response){
+        if(response.data.code == 1){
+            getExp = setInterval(requestExp,1000);//请求累计费用及房间温度
+            getRoomtemp = setInterval(requestRoomtemp,1000);
+            getStatus = setInterval(requestStatus,1000);
+        }
+    })
+    .catch(error =>{
+        console.log("error");
+    });
+}
 function test(){
 }
 var temp = 21;//初始房间温度
 var targetTemp = 26;//缺省目标温度
 var tempTimer,getExp,getRoomtemp;
 var roomid = 1;
+
+init();
