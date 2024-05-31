@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'smallHotel/boostrap/css/bootstrap.min.css' %}"> <!--need to change-->
+    <link rel="stylesheet" href="https://cdn.staticfile.net/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+    <style>
+        #front{
+            width:1000px;
+        }
+        #front span {
+            font-size: 1em;
+            padding: 12px;
+        }
+        #block-container{
+            position:absolute;
+            left:13%;
+            top:30%
+        }
+        .block {
+            border: 2px solid black;
+            width: 200px;
+            height: 200px;
+            margin: 5px;
+            display: inline-block;
+        }
+        #center {
+            width:200px;
+            height:100px;
+            position:absolute;
+            left:42%;
+            top:65%
+        }
+        #form{
+            padding:10px
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdn.staticfile.net/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+	<script src="https://cdn.staticfile.net/jquery/2.1.1/jquery.min.js"></script>
+	<script src="https://cdn.staticfile.net/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<body>
+    <h1>入住</h1>
+    <div id="front">
+        <span id="return">
+            <a href="/smallHotel/rec" class="btn btn-default">返回</a>
+        </span>
+        <span>进度</span>
+        <span>等级用户信息</span>
+        <span>——></span>
+        <span style="color: green;">选择房间</span>
+        <span>——></span>
+        <span>办理入住成功</span>
+    </div>
+    <h3>当前房间状态:</h3>
+    <div id="block-container">
+        <div class="block">
+            <div style="padding:40px">
+                <p align="center"><img src="../../static/smallHotel/svg/house-door.svg" alt="Bootstrap" width="100" height="100"></p>
+                <p align="center">
+                    <span>1</span>
+                    <span>{{room1}}</span>
+                </p>
+            </div>
+        </div>
+        <div class="block">
+            <div style="padding:40px">
+                <p align="center"><img src="../../static/smallHotel/svg/house-door.svg" alt="Bootstrap" width="100" height="100"></p>
+                <p align="center">
+                    <span>2</span>
+                    <span>{{room2}}</span>
+                </p>
+            </div>
+        </div>
+        <div class="block">
+            <div style="padding:40px">
+                <p align="center"><img src="../../static/smallHotel/svg/house-door.svg" alt="Bootstrap" width="100" height="100"></p>
+                <p align="center">
+                    <span>3</span>
+                    <span>{{room3}}</span>
+                </p>
+            </div>
+        </div>
+        <div class="block">
+            <div style="padding:40px">
+                <p align="center"><img src="../../static/smallHotel/svg/house-door.svg" alt="Bootstrap" width="100" height="100"></p>
+                <p align="center">
+                    <span>4</span>
+                    <span>{{room4}}</span>
+                </p>
+            </div>
+        </div>
+        <div class="block">
+            <div style="padding:40px">
+                <p align="center"><img src="../../static/smallHotel/svg/house-door.svg" alt="Bootstrap" width="100" height="100"></p>
+                <p align="center">
+                    <span>5</span>
+                    <span>{{room5}}</span>
+                </p>
+            </div>
+        </div><link rel="stylesheet" href="https://cdn.staticfile.net/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+    </div>
+    <div id="center">
+        <form id="form" action="" method="post">
+                <p>
+                    <label for="d1">请选择房间:</label>
+                    <input type="text" id='d1' name="room_num">
+                </p>
+                <input type="submit" class="btn btn-success btn-block">
+        </form>
+    </div>
+</body>
+</html>

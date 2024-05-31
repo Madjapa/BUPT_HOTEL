@@ -10,22 +10,24 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
     <script src="{% static 'smallHotel/js/axios.js' %}"></script>
     <script type="text/javascript" src="{% static 'smallHotel/js/customer.js' %}"></script>
+    <script>roomid = {{roomid}}</script>
 
 </head>
 
+
 <body onselectstart="return false">
+    <video src="../../static/smallHotel/video/bk2.mp4" loop="loop" autoplay="autoplay"></video>
     <div id="status" value="0">
         <p id="statusText">
             关机
         </p>
     </div>
     <div id="total_page">
-
         <div id="main_panel">
             <button type="button" id="current_temp_button" onclick="ACSwitch()">
                 <span id="roomtemp"></span>
                 <span>室内温度</span>
-                <span id="switch">开空调<span>
+                <span id="switch">开空调</span>
             </button>
             <div>
                 <button type="button" id="target_temp_sub_button"><span>-</span></button>
@@ -37,11 +39,10 @@
         <div id="sub_panel">
             <div id="speed_panel">
                 当前风速
-                <button type="button" id="low_speed_button" ><span>低风速</span></button>
-                <button type="button" id="middle_speed_button" ><span>中风速</span></button>
-                <button type="button" id="high_speed_button"><span>高风速</span></button>
+                <button type="button" id="low_speed_button" onclick="windspeedAdjust.call(this)"><span>低风速</span></button>
+                <button type="button" id="middle_speed_button" onclick="windspeedAdjust.call(this)"><span>中风速</span></button>
+                <button type="button" id="high_speed_button" onclick="windspeedAdjust.call(this)"><span>高风速</span></button>
             </div>
-            <div>
             <div id="mode_panel">
                     <button type="button" id="cool_button" ><span>制冷</span></button>
                     <button type="button" id="heat_button" ><span>制热</span></button>
@@ -56,6 +57,7 @@
             <p>当前累计费用</p>
             <div><div id="expenses">--</div>元</div>
         </div>
+    </div>
     </div>
 </body>
 

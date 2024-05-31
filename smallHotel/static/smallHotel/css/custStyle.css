@@ -1,13 +1,27 @@
 body{
   margin:0;
 }
+video{
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+    z-index: -100;
+    -webkit-filter: grayscale(20%);
+}
+#statusText{
+  text-align:center;
+  color: #FFFFFF;
+}
 div#total_page{
         padding: 0px 10%;
         display: grid;
-         grid-template-columns: 40% 0%;
+        grid-template-columns: 40% 0%;
       }
       
-      div#main_panel{
+div#main_panel{
         height:calc(60vh);
         width:calc(50vw);
         float:left;
@@ -20,11 +34,11 @@ div#total_page{
         width:calc(50vh);
         border-radius: calc(30vh); 
         background: linear-gradient(to right, #1aa3ff, #ccebff);
-        border: 2px solid #99d6ff;
+        border: 2px solid #939494;
         -webkit-transition-duration: 0.4s;
         transition-duration: 0.4s;
       }
-      #current_temp_button:hover {
+#current_temp_button:hover {
         width:calc(56vh);
         color: #0099cc;
       }
@@ -51,7 +65,7 @@ height:40px;
 width:80px;
 background-color:＃C0C0C0;
 }   
-      div#sub_panel{
+div#sub_panel{
         height:calc(60vh);
         width:calc(50vw);
       }
@@ -65,10 +79,10 @@ background-color:＃C0C0C0;
 #speed_panel button {
         -webkit-transition-duration: 0.4s;
         transition-duration: 0.4s;
+        border: 2px solid #939494;
       }
 #speed_panel button:hover {
-height:calc(30vh);
-        color: #0099cc;
+      color: #0099cc;
       }
 #speed_panel button:active {
 -webkit-transition-duration: 0.05s;
@@ -97,26 +111,28 @@ width:calc(5vw);
 margin-top:calc(5vh);
 vertical-align: bottom;
 }
-      div#mode_panel{
-        height:calc(25vh);
+div#mode_panel{
+        position: relative;
+        min-height:calc(25vh);
         width:calc(50vw);
-        line-height:calc(25vh);
         text-align:center;
       }
 #mode_panel button{
+  position: relative;
+  top: calc(8vh);
 height:calc(10vh);
 width:calc(10vh);
 }
 
-      div#cost_rule_panel{
+div#cost_rule_panel{
         height:calc(30vh);
         width:calc(50vw);
-        float:left;
         text-align:center;
+        color: #FFFFFF;
       }
-      div#current_cost_panel{
+div#current_cost_panel{
         height:calc(30vh);
         width:calc(50vw);
-        float:left;
         text-align:center;
+        color: #FFFFFF;
       }
