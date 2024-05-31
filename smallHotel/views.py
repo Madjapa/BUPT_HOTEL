@@ -71,14 +71,6 @@ def getDetail(request, roomid):
 def customer(request,roomid):
     return render(request, "smallHotel/customer.html",{"roomid":roomid})
 
-#酒店管理员
-def manager(request):
-    return render(request,"smallHotel/manager.html")
-
-def monitor(request):
-    return render(request,"smallHotel/monitor.html")
-
-
 def powerOn(request):
     if request.method == 'POST':
         data = json.loads(request.body.decode('utf-8'))
@@ -93,6 +85,27 @@ def powerOff(request):
         roomid = data.get('roomid')
         Hotel.get_instance().rooms[roomid].power_off()
         return JsonResponse({'code': 1})
+
+def getExp(request):
+    if request.method == 'GET':
+        roomid = request.GET['roomid']
+        if roomid == '1':
+            response = {'expenses' : '10'}
+        elif roomid == '2':
+            response = {'expenses' : '20'}
+        else:
+            response = {'expenses' : '30'}
+        return JsonResponse(response)
+
+def getRoomTemp(request):
+    if request.method == 'GET':
+        roomid = request.GET.get('roomid',"")
+        print(request.POST)
+    temp = Hotel.get_instance().rooms[int(roomid)].temp
+    response = {
+        "roomTemp": temp
+    }
+    return JsonResponse(response)
 
 def tempSubmit(request):
     if request.method == 'POST':
@@ -111,6 +124,34 @@ def flowSubmit(request):
     response = {'code': 1}
     return JsonResponse(response)
 
+def getTimer(request):
+    if request.method == 'POST':
+        Hotel.get_instance().scheduler.check_wait_queue()
+        Hotel.get_instance().time_forward()
+    return render(request,"smallHotel/timer.html")
+
+#监控界面
+def monitor(request):
+    return render(request,"smallHotel/monitor.html")
+
+def getSpeed(request):
+    if request.method == 'GET':
+        roomid = request.GET.get('roomid',"")
+    temp = Hotel.get_instance().rooms[int(roomid)].target_temp
+    response = {
+        "windSpeed": 0
+    }
+    return JsonResponse(response)
+
+def getStatus(request):
+    if request.method == 'GET':
+        roomid = request.GET.get('roomid',"")
+    temp = Hotel.get_instance().rooms[int(roomid)].target_temp
+    response = {
+        "status": 1
+    }
+    return JsonResponse(response)
+
 def getTargetTemp(request):
     if request.method == 'GET':
         roomid = request.GET.get('roomid',"")
@@ -123,31 +164,11 @@ def getTargetTemp(request):
 def getRoomTemp(request):
     if request.method == 'GET':
         roomid = request.GET.get('roomid',"")
-        print(request.POST)
-
-    temp = Hotel.get_instance().rooms[int(roomid)].temp
+    temp = Hotel.get_instance().rooms[int(roomid)].target_temp
     response = {
-        "roomTemp": temp
+        "roomTemp": 7
     }
     return JsonResponse(response)
-
-def getExp(request):
-    if request.method == 'GET':
-        roomid = request.GET['roomid']
-        if roomid == '1':
-            response = {'expenses' : '10'}
-        elif roomid == '2':
-            response = {'expenses' : '20'}
-        else:
-            response = {'expenses' : '30'}
-
-        return JsonResponse(response)
-
-def getTimer(request):
-    if request.method == 'POST':
-        Hotel.get_instance().scheduler.check_wait_queue()
-        Hotel.get_instance().time_forward()
-    return render(request,"smallHotel/timer.html")
 
 def testCase(request):
     return HttpResponse(test())
