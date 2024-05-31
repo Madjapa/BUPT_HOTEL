@@ -43,10 +43,7 @@ class Customer:
     def __init__(self, id, name, num):
         self.id = id
         self.name = name
-        self.num = num  # ?
-
-    # def use(self):
-    #     return
+        self.num = num
 
 
 # 前台
@@ -98,8 +95,13 @@ class Reception:
         )
         self.orders[room_id][-1].accommodation_bill = accommodation_bill
         self.orders[room_id][-1].AC_bill = AC_bill
-        Reception.save_as_csv(detailed_records_AC)
-        pass
+
+        Reception.save_detailed_records_as_csv(detailed_records_AC)
+        Reception.save_bill_as_csv("accommodation", accommodation_bill)
+        Reception.save_bill_as_csv("AC", AC_bill)
+        BillInfo.objects.create(tag="住宿", room_id=room_id, fee=accommodation_bill.fee)
+        BillInfo.objects.create(tag="空调", room_id=room_id, fee=AC_bill.fee)
+
         Reception.set_room_state(room_id)
 
     def query_fee_records(self, room_id):
@@ -143,7 +145,7 @@ class Reception:
         # return something
 
     @staticmethod
-    def save_as_csv(detailed_records_AC):
+    def save_detailed_records_as_csv(detailed_records_AC):
         import csv
 
         with open(
@@ -179,6 +181,30 @@ class Reception:
                         i.fee_rate,
                     ]
                 )
+
+    @staticmethod
+    def save_bill_as_csv(tag, bill):
+        import csv
+
+        filename = tag + "_bill" + ".csv"
+        with open(
+            "smallHotel/static/smallHotel/" + filename,
+            "w",
+            encoding="utf-8",
+            newline="",
+        ) as file:
+            writer = csv.writer(file)
+            writer.writerow(
+                [
+                    "房间号",
+                    "入住时间",
+                    "离开时间",
+                    "空调总费用" if tag == "AC" else "住宿总费用",
+                ]
+            )
+            writer.writerow(
+                [bill.room_id, "", "", bill.fee]  # TODO: 入住时间, 离开时间
+            )
 
 
 # 订单
