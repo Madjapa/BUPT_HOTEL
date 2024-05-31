@@ -91,7 +91,7 @@ def output(time):
             + " "
             + speed_display[room.speed]
             + " "
-            + str(room.accommodation_fee)
+            + str(room.AC_fee)
             + "</td>"
         )
     print(

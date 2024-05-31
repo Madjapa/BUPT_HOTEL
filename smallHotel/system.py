@@ -59,6 +59,8 @@ class Reception:
         for i in Hotel.get_instance().rooms.values():
             if i.state:
                 self.orders[i.id].append(Order(i.customer_id, i.id))
+            if i.AC_status:
+                Hotel.get_instance().rooms[i.id].power_on(i.temp)
 
     def register_customer_info(self, customer_id, customer_name, number, date):
         CustomerInfo.objects.create(name=customer_name,number=number,customer_id=customer_id)
