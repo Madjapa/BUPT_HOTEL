@@ -96,7 +96,7 @@ function windspeedAdjust(){//风速调节
     }else{
         var windspeed = 2;
     }
-    axiosInstance.get('windSpeed/',{params: {roomid: roomid,windspeed: windspeed}})
+    axiosInstance.post('windSpeed/',{roomid: roomid,windspeed: windspeed})
     .then(function(response){
         if(response.data.code == 1){
             //待补充

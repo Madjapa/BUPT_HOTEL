@@ -99,16 +99,15 @@ def tempSubmit(request):
         data = json.loads(request.body.decode('utf-8'))
         roomid = data.get('roomid')
         temp = data.get('temp')
-        Hotel.get_instance().rooms[roomid].temp = temp
+        Hotel.get_instance().rooms[roomid].target_temp = temp
         return JsonResponse({'code': '1'})
 
 def flowSubmit(request):
     if request.method == 'POST':
         data = json.loads(request.body.decode('utf-8'))
         roomid = data.get('roomid')
-        roomtemp = data.get('roomtemp')
-    print(request.body)
-    print("roomid " + str(roomid) + " temp " + str(roomtemp) )
+        speed = data.get('windspeed')
+        Hotel.get_instance().rooms[roomid].speed = speed
     response = {'code': 1}
     return JsonResponse(response)
 
