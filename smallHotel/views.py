@@ -86,6 +86,15 @@ def powerOff(request):
         Hotel.get_instance().rooms[roomid].power_off()
         return JsonResponse({'code': 1})
 
+def getExp(request):
+    if request.method == 'GET':
+        roomid = request.GET['roomid']
+    exp = Hotel.get_instance().rooms[int(roomid)].AC_fee
+    response = {
+        "expenses": exp
+    }
+    return JsonResponse(response)
+
 def getRoomTemp(request):
     if request.method == 'GET':
         roomid = request.GET.get('roomid',"")
@@ -158,13 +167,6 @@ def getTargetTemp(request):
         "targetTemp": temp
     }
     return JsonResponse(response)
-
-
-def getExp(request):
-    if request.method == 'GET':
-        roomid = int(request.GET['roomid'])
-        response = {'expenses': Hotel.get_instance().rooms[roomid].accommodation_fee}
-        return JsonResponse(response)
 
 def getTimer(request):
     if request.method == 'POST':

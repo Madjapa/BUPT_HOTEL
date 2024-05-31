@@ -218,7 +218,7 @@ class Room:
         self.customer_id = customer_id
         self.fee_per_day = fee_per_day
         self.init_temp = temp
-        self.accommodation_fee = 0.0
+        self.AC_fee = 0.0
 
     def power_on(self, current_room_temp):
         if self.AC_status == False:
@@ -421,15 +421,15 @@ class Scheduler:
                         )
                     )
                     i.detail_record.fee += 1/3
-                    Hotel.get_instance().rooms[i.room_id].accommodation_fee += 1/3
+                    Hotel.get_instance().rooms[i.room_id].AC_fee += 1/3
                 case 1:  # 中风速
                     Hotel.get_instance().rooms[i.room_id].temp -= 0.5
                     i.detail_record.fee += 1/2
-                    Hotel.get_instance().rooms[i.room_id].accommodation_fee += 1/2
+                    Hotel.get_instance().rooms[i.room_id].AC_fee += 1/2
                 case 2:  # 高风速
                     Hotel.get_instance().rooms[i.room_id].temp -= 1
                     i.detail_record.fee += 1
-                    Hotel.get_instance().rooms[i.room_id].accommodation_fee += 1
+                    Hotel.get_instance().rooms[i.room_id].AC_fee += 1
             RoomInfo.objects.filter(room_id=i.room_id).update(temp=Hotel.get_instance().rooms[i.room_id].temp)
             if (
                 Hotel.get_instance().rooms[i.room_id].temp
