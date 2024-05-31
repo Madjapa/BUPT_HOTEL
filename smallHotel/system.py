@@ -16,8 +16,8 @@ class Hotel:
             Hotel.rooms = {}
             for i in RoomInfo.objects.all():
                 Hotel.rooms[i.room_id] = Room(i.room_id, i.temp, i.fee_per_day,days=i.days,target_temp=i.target_temp,speed=i.speed,state=i.state,AC_status=i.AC_status,AC_running=i.AC_running,customer_id=i.customer_id)
-            Hotel.reception = Reception("syb")
             Hotel.current_time = 0
+            Hotel.reception = Reception("syb")
 
         else:
             return
