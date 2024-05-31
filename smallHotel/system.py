@@ -174,7 +174,7 @@ class Reception:
                         i.service_start_time,
                         i.service_end_time,
                         i.service_time,
-                        i.speed,
+                        ["低", "中", "高"][i.speed],
                         i.fee,
                         i.fee_rate,
                     ]
@@ -232,17 +232,18 @@ class DetailRecord:
         self.service_time = None
         self.speed = speed
         self.fee = 0
-        # TODO: 当前费用
-        # TODO: 费率
-        self.fee_rate = 1
+        self.fee_rate = [0.33, 0.5, 1][speed]
 
     def store(self):
         DetailRecordInfo(
             room_id=self.room_id,
-            speed=self.speed,
+            speed=["低", "中", "高"][self.speed],
             service_start_time=self.service_start_time,
             service_end_time=self.service_end_time,
             service_time=self.service_time,
+            request_time=self.request_time,
+            fee=self.fee,
+            fee_rate=self.fee_rate,
         ).save()
         pass
 

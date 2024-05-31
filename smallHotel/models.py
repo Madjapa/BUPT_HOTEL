@@ -29,8 +29,10 @@ class BillInfo(models.Model):
 class DetailRecordInfo(models.Model):
     objects = models.Manager()
     room_id = models.IntegerField()
+    request_time = models.IntegerField()
     service_start_time = models.IntegerField(blank=True, null=True)
     service_end_time = models.IntegerField(blank=True, null=True)
     service_time = models.IntegerField(blank=True, null=True)
-    speed = models.IntegerField()
+    speed = models.CharField(max_length=1)
     fee = models.FloatField(blank=True, null=True)
+    fee_rate = models.FloatField()
