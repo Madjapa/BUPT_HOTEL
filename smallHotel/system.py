@@ -77,7 +77,9 @@ class Reception:
         room = Hotel.get_instance().rooms[int(room_id)]
         room.state = True
         room.customer_id = customer_id
-        RoomInfo.objects.filter(room_id=room_id).update(customer_id=customer_id, state=1)
+        RoomInfo.objects.filter(room_id=room_id).update(
+            customer_id=customer_id, state=True
+        )
 
     def deposite(self, amount, room_id):
         self.orders[room_id][-1].deposit = amount
@@ -231,8 +233,9 @@ class Room:
                 self.id, self.target_temp, self.speed
             )
             self.days += 1
-            RoomInfo.objects.filter(room_id=self.id).update(AC_status=1)
-            RoomInfo.objects.filter(room_id=self.id).update(AC_running=self.AC_running)
+            RoomInfo.objects.filter(room_id=self.id).update(
+                AC_status=self.AC_status, AC_running=self.AC_running, days=self.days
+            )
         pass
 
     # def request_number(self, service_number):
