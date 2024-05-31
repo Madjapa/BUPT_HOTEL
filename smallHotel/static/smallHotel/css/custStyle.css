@@ -1,50 +1,50 @@
 body{
-  margin:0;
+margin:0;
 }
 video{
-    position: fixed;
-    right: 0;
-    bottom: 0;
-    object-fit: cover;
-    width: 100%;
-    height: 100%;
-    z-index: -100;
-    -webkit-filter: grayscale(20%);
+position: fixed;
+right: 0;
+bottom: 0;
+object-fit: cover;
+width: 100%;
+height: 100%;
+z-index: -100;
+-webkit-filter: grayscale(20%);
 }
 #statusText{
-  text-align:center;
-  color: #FFFFFF;
+text-align:center;
+color: #FFFFFF;
 }
 div#total_page{
-        padding: 0px 10%;
-        display: grid;
-        grid-template-columns: 40% 0%;
-      }
-      
+padding: 0px 10%;
+display: grid;
+grid-template-columns: 40% 0%;
+}
+
 div#main_panel{
-        height:calc(60vh);
-        width:calc(50vw);
-        float:left;
-        text-align:center;
-      }
+height:calc(60vh);
+width:calc(50vw);
+float:left;
+text-align:center;
+}
 
 #current_temp_button{
-        position:relative;
-        height:calc(50vh);
-        width:calc(50vh);
-        border-radius: calc(30vh); 
-        background: linear-gradient(to right, #1aa3ff, #ccebff);
-        border: 2px solid #939494;
-        -webkit-transition-duration: 0.4s;
-        transition-duration: 0.4s;
-      }
+position:relative;
+height:calc(50vh);
+width:calc(50vh);
+border-radius: calc(30vh); 
+background: linear-gradient(to right, #1aa3ff, #ccebff);
+border: 2px solid #939494;
+-webkit-transition-duration: 0.4s;
+transition-duration: 0.4s;
+}
 #current_temp_button:hover {
-        width:calc(56vh);
-        color: #0099cc;
-      }
+width:calc(56vh);
+color: #0099cc;
+}
 #current_temp_button:active {
 -webkit-transition-duration: 0.05s;
-        transition-duration: 0.05s;
+transition-duration: 0.05s;
 color: #FFFFFF;
 }
 #main_panel div{
@@ -66,73 +66,80 @@ width:80px;
 background-color:＃C0C0C0;
 }   
 div#sub_panel{
-        height:calc(60vh);
-        width:calc(50vw);
-      }
-      div#speed_panel{
-        position: relative;
-        min-height:calc(35vh);
-        width:calc(50vw);
-        text-align:center;
+height:calc(60vh);
+width:calc(50vw);
+}
+div#speed_panel{
+position: relative;
+min-height:calc(35vh);
+width:calc(50vw);
+text-align:center;
 
-      }
+}
 #speed_panel button {
-        -webkit-transition-duration: 0.4s;
-        transition-duration: 0.4s;
-        border: 2px solid #939494;
-      }
+-webkit-transition-duration: 0.4s;
+transition-duration: 0.4s;
+border: 2px solid #939494;
+}
 #speed_panel button:hover {
-      color: #0099cc;
-      }
+color: #0099cc;
+}
 #speed_panel button:active {
 -webkit-transition-duration: 0.05s;
-        transition-duration: 0.05s;
+transition-duration: 0.05s;
 color: #FFFFFF;
 }
 #low_speed_button{
 height:calc(10vh);
 width:calc(5vw);
-background: linear-gradient(to right, #ccebff, #80ccff);
-          border: 2px solid #99d6ff;
+border: 2px solid #99d6ff;
 vertical-align: bottom;
+}
+#low_speed_button.clicked{
+background: linear-gradient(to right, #ccebff, #80ccff);
 }
 #middle_speed_button{
 height:calc(20vh);
 width:calc(5vw);
-background: linear-gradient(to right, #80ccff, #33adff);
-        border: 2px solid #99d6ff;
+border: 2px solid #99d6ff;
 vertical-align: bottom;
+}
+#middle_speed_button.clicked{
+background: linear-gradient(to right, #80ccff, #33adff);
 }
 #high_speed_button{
 height:calc(30vh);
 width:calc(5vw);
-  background: linear-gradient(to right, #33adff, #008ae6);
-          border: 2px solid #99d6ff;
+border: 2px solid #99d6ff;
 margin-top:calc(5vh);
 vertical-align: bottom;
 }
+#high_speed_button.clicked{
+background: linear-gradient(to right, #33adff, #008ae6);
+}
+
 div#mode_panel{
-        position: relative;
-        min-height:calc(25vh);
-        width:calc(50vw);
-        text-align:center;
-      }
+position: relative;
+min-height:calc(25vh);
+width:calc(50vw);
+text-align:center;
+}
 #mode_panel button{
-  position: relative;
-  top: calc(8vh);
+position: relative;
+top: calc(8vh);
 height:calc(10vh);
 width:calc(10vh);
 }
 
 div#cost_rule_panel{
-        height:calc(30vh);
-        width:calc(50vw);
-        text-align:center;
-        color: #FFFFFF;
-      }
+height:calc(30vh);
+width:calc(50vw);
+text-align:center;
+color: #FFFFFF;
+}
 div#current_cost_panel{
-        height:calc(30vh);
-        width:calc(50vw);
-        text-align:center;
-        color: #FFFFFF;
-      }
+height:calc(30vh);
+width:calc(50vw);
+text-align:center;
+color: #FFFFFF;
+}

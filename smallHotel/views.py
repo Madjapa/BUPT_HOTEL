@@ -162,5 +162,17 @@ def getTargetTemp(request):
     return JsonResponse(response)
 
 
+def getExp(request):
+    if request.method == 'GET':
+        roomid = int(request.GET['roomid'])
+        response = {'expenses': Hotel.get_instance().rooms[roomid].accommodation_fee}
+        return JsonResponse(response)
+
+def getTimer(request):
+    if request.method == 'POST':
+        Hotel.get_instance().scheduler.check_wait_queue()
+        Hotel.get_instance().time_forward()
+    return render(request,"smallHotel/timer.html")
+
 def testCase(request):
     return HttpResponse(test())

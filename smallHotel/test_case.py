@@ -1,6 +1,5 @@
 from smallHotel.system import *
 
-
 test_case = [
     ["开机", "", "", "", ""],
     ["18", "开机", "", "", "开机"],
@@ -91,6 +90,8 @@ def output(time):
             + str(room.target_temp)
             + " "
             + speed_display[room.speed]
+            + " "
+            + str(room.accommodation_fee)
             + "</td>"
         )
     print(

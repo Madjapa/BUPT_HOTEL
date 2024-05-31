@@ -89,12 +89,19 @@ function clearWindCssEcp(windspeed){
 function windspeedAdjust(){//风速调节
     //被选中风速条从低到该风速条显示颜色，其余为灰色
     //显示当前风速
+    document.getElementById('low_speed_button').classList.add("clicked");
+    document.getElementById('middle_speed_button').classList.add("clicked")
+    document.getElementById('high_speed_button').classList.add("clicked")
     if(this.id == 'low_speed_button'){
         var windspeed = 0;
+        document.getElementById('middle_speed_button').classList.remove("clicked")
+        document.getElementById('high_speed_button').classList.remove("clicked")
     }else if(this.id == 'middle_speed_button'){
         var windspeed = 1;
+        document.getElementById('high_speed_button').classList.remove("clicked")
     }else{
         var windspeed = 2;
+        this.classList.add("bold");
     }
     axiosInstance.post('windSpeed/',{roomid: roomid,windspeed: windspeed})
     .then(function(response){
