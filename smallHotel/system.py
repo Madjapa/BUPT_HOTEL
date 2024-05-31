@@ -98,6 +98,7 @@ class Reception:
         )
         self.orders[room_id][-1].accommodation_bill = accommodation_bill
         self.orders[room_id][-1].AC_bill = AC_bill
+        Reception.save_as_csv(detailed_records_AC)
         pass
         Reception.set_room_state(room_id)
 
@@ -141,16 +142,43 @@ class Reception:
         Hotel.get_instance().rooms[room_id].state = False
         # return something
 
-    def create_csv(self):
+    @staticmethod
+    def save_as_csv(detailed_records_AC):
         import csv
 
-        data =[[Order.customer_id ,Order.room_id ,Order.detailed_records_AC , Order.deposit ,Order.accommodation_bill ,Order.AC_bill],
-               [Bill.tag ,Bill.room_id ,Bill.fee ],
-               [DetailRecord.room_id ,DetailRecord.request_time ,DetailRecord.service_start_time ,DetailRecord.service_end_time ,DetailRecord.service_time ,DetailRecord.speed ]]
-
-        with open('output.csv', 'w', newline='') as file:
+        with open(
+            "smallHotel/static/smallHotel/detailRecord.csv",
+            "w",
+            encoding="utf-8",
+            newline="",
+        ) as file:
             writer = csv.writer(file)
-            writer.writerows(data)
+            writer.writerow(
+                [
+                    "房间号",
+                    "请求时间",
+                    "服务开始时间",
+                    "服务开始时间",
+                    "服务结束时间",
+                    "服务时长",
+                    "风速",
+                    "费用",
+                    "费率",
+                ]
+            )
+            for i in detailed_records_AC:
+                writer.writerow(
+                    [
+                        i.room_id,
+                        i.request_time,
+                        i.service_start_time,
+                        i.service_end_time,
+                        i.service_time,
+                        i.speed,
+                        i.fee,
+                        i.fee_rate,
+                    ]
+                )
 
 
 # 订单
