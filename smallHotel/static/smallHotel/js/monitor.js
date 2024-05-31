@@ -76,6 +76,7 @@ function mouseleave(){
 /*初始化*/
 var rownum = 2;
 var colnum = 3;
+var upperbounce = 5;
 var update;
 function init(){
     let template = document.getElementById("pannel");
@@ -89,6 +90,10 @@ function init(){
             room.textContent = String(r * 3 + c + 1) + "号客房";
             var col = document.createElement("div");
             col.setAttribute("class","col " + String(r * 3 + c + 1));
+            if(r * 3 + c + 1 > upperbounce){
+                table.appendChild(col);
+                break;
+            }
             col.appendChild(tem);
             table.appendChild(col);
         }       
@@ -120,6 +125,9 @@ async function updateData(){
     clearInterval(update);
     for (let r = 0; r < rownum; r++){
         for(let c = 0;c < colnum;c++){
+            if(r * 3 + c + 1 > upperbounce){
+                break;
+            }
             var status = await RequestStatus(r * 3 + c + 1);  
             if(status){//若已开机，则更新内容
                 RequestRoomtemp(r * 3 + c + 1);
