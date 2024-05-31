@@ -270,8 +270,6 @@ class Room:
         self.scheduler.clear(self.id)
         self.AC_running = False
         RoomInfo.objects.filter(room_id=self.id).update(AC_running=0)
-        self.AC_status = False
-        RoomInfo.objects.filter(room_id=self.id).update(AC_status=0)
 
     # def request_state(self, room_id):
     #     pass
