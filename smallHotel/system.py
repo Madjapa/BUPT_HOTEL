@@ -529,7 +529,9 @@ class ServeItem:
     def create_csv(self):
         import csv
 
-        data =[] 
+        data =[[Order.customer_id ,Order.room_id ,Order.detailed_records_AC , Order.deposit ,Order.accommodation_bill ,Order.AC_bill],
+               [Bill.tag ,Bill.room_id ,Bill.fee ],
+               [DetailRecord.room_id ,DetailRecord.request_time ,DetailRecord.service_start_time ,DetailRecord.service_end_time ,DetailRecord.service_time ,DetailRecord.speed ]]
 
         with open('output.csv', 'w', newline='') as file:
             writer = csv.writer(file)
