@@ -122,12 +122,6 @@ def flowSubmit(request):
     response = {'code': 1}
     return JsonResponse(response)
 
-def getTimer(request):
-    if request.method == 'POST':
-        Hotel.get_instance().scheduler.check_wait_queue()
-        Hotel.get_instance().time_forward()
-    return render(request,"smallHotel/timer.html")
-
 #监控界面
 def monitor(request):
     return render(request,"smallHotel/monitor.html")
