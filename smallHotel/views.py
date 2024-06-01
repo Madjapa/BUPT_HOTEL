@@ -1,6 +1,6 @@
 import random
 from django.shortcuts import render,HttpResponse,redirect
-from django.http import JsonResponse
+from django.http import JsonResponse,FileResponse
 from .system import *
 import json
 from smallHotel.test_case import *
@@ -66,6 +66,15 @@ def getDetail(request, roomid):
         "c":AC_fee + accommodation_fee,
     }
     return render(request,"smallHotel/detail.html",data)
+
+def AC_bill(request):
+    return FileResponse(open("smallHotel/static/smallHotel/AC_bill.csv", "rb"))
+
+def accommodation_bill(request):
+    return FileResponse(open("smallHotel/static/smallHotel/accommodation_bill.csv", "rb"))
+
+def detailRecord(request):
+    return FileResponse(open("smallHotel/static/smallHotel/detailRecord.csv", "rb"))
 
 #顾客页面
 def customer(request,roomid):

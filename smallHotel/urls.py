@@ -38,4 +38,7 @@ urlpatterns = [
     path("timer",views.getTimer,name='yyyyy'),
     path("test_case/",views.testCase),
     path("init_room/",views.initRoom),
+    path("ac_bill/",views.AC_bill),
+    path("accommodation_bill/",views.accommodation_bill),
+    path("detailRecord/",views.detailRecord),
 ]
