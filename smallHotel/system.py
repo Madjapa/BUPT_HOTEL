@@ -160,7 +160,6 @@ class Reception:
                     "房间号",
                     "请求时间",
                     "服务开始时间",
-                    "服务开始时间",
                     "服务结束时间",
                     "服务时长",
                     "风速",
@@ -473,6 +472,17 @@ class Scheduler:
         RoomInfo.objects.filter(room_id=cast_to_wait_serve_item.room_id).update(
             AC_running=0
         )
+        cast_to_wait_serve_item.detail_record.service_end_time = (
+            Hotel.get_instance().current_time
+        )
+        cast_to_wait_serve_item.detail_record.service_time = (
+            cast_to_wait_serve_item.detail_record.service_end_time
+            - cast_to_wait_serve_item.detail_record.service_start_time
+        )
+        Hotel.get_instance().reception.orders[cast_to_wait_serve_item.room_id][
+            -1
+        ].detailed_records_AC.append(cast_to_wait_serve_item.detail_record)
+        cast_to_wait_serve_item.detail_record.store()
 
     def check_serve_queue(self):
         for i in self.serve_queue[:]:
