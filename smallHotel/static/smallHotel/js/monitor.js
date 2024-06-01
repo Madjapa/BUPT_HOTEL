@@ -37,6 +37,9 @@ function RequestRoomtemp(Roomid){
     }); 
 }
 function RequestSpeed(Roomid){
+    for(let d = 0;d < 3;d++){
+        document.getElementsByClassName(Roomid)[0].getElementsByClassName('Speed')[d].classList.remove("mark");
+    }
     axiosInstance.get('getSpeed/',{params:{roomid: Roomid}})
     .then(function(response){
             var speed = response.data.windSpeed
